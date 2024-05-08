@@ -1,13 +1,20 @@
 export interface User {
     id: string;
-    fullName: string;
+    userName: string;
     email: string;
-    phoneNumber: string;
-    address: Address;
-    gender: string;
-    birthDay: string;
-    avatar: string;
+    password: string;
+    activeFlag: Address;
+    removalFlag: boolean;
     role: Role[];
+    userProfile: UserProfile;
+}
+
+export interface UserProfile {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatar: string;
+    removalFlag: boolean;
 }
 
 export interface Role {
@@ -68,4 +75,10 @@ export interface JWTType {
     sub: string;
     exp: number;
     iat: number;
+}
+
+export interface ChangePasswordRequest {
+    email: string;
+    oldPassword: string;
+    newPassword: string;
 }

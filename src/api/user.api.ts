@@ -1,51 +1,48 @@
-import { Address } from '~/data/Interface';
+import { Address, ChangePasswordRequest, User } from '~/data/Interface';
 import AxiosClient from './axiosClient/AxiosClient';
 
-export interface userAuth {
-    email: string;
-    password: string;
-}
-export interface UserUpdateProfile {
-    email: string;
-    fullName: string;
-    phoneNumber: string;
-    address: Address;
-    gender: string;
-    birthDay: string;
-    avatar: string;
-}
 const userApi = {
-    refreshToken: (refreshToken: string) => {
-        const url = `token:${refreshToken}`;
-        return AxiosClient.post(url);
-    },
-    login: (email: string, password: string) => {
-        const url = 'auth/login';
-        return AxiosClient.post(url, { email, password });
-    },
     getMe: (email: string) => {
         const url = `user/${email}`;
         return AxiosClient.get(url);
     },
-    getUsers: (pageNo: number) => {
-        const url = `users/paging?pageNo=${pageNo}&pageSize=3`;
+    getUsers: (pageNo: number, pageSize: number, sortBy: string, sortDir: string) => {
+        const url = `users/paging?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
         return AxiosClient.get(url);
     },
-    updateProfile: (userUpdateProfile: UserUpdateProfile) => {
-        const url = `user/${userUpdateProfile.email}`;
-        return AxiosClient.put(url, userUpdateProfile);
+    getUserByName: (name: string) => {
+        const url = `users/name/${name}`;
+        return AxiosClient.get(url);
     },
-    updateAvatar: (email: string, avatar: string) => {
-        const url = `user/avt/${email}`;
-        return AxiosClient.put(url, avatar);
+    getById: (id: string) => {
+        const url = `user/${id}`;
+        return AxiosClient.get(url);
+    },
+    updateProfile: (user: User, email: string) => {
+        const url = `user/${email}`;
+        return AxiosClient.put(url, user);
     },
     deleteUser: (id: string) => {
-        const url = `user/delete/${id}`;
+        const url = `user/${id}`;
         return AxiosClient.delete(url);
     },
-    searchUser: (search: string) => {
-        const url = `user/search?search=${search}`;
+    searchUser: (
+        search: string,
+        pageNo: number,
+        pageSize: number,
+        sortBy: string,
+        sortDir: string,
+    ) => {
+        const url = `users/search-by-name?keyword=${search}&pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
         return AxiosClient.get(url);
+    },
+    // updateAvatar: (email: string, avatar: string) => {
+    //     const url = `user/avt/${email}`;
+    //     return AxiosClient.put(url, avatar);
+    // },
+    changePassword: (changePasswordRequest: ChangePasswordRequest) => {
+        const url = `user/change-password`;
+        return AxiosClient.post(url, changePasswordRequest);
     },
 };
 export default userApi;
