@@ -1,6 +1,6 @@
 import React from 'react';
 import { useController } from 'react-hook-form';
-import classNames from '~/utils/classNames';
+import classNames from '@/utils/classNames';
 
 const InputProfile = ({
     control,

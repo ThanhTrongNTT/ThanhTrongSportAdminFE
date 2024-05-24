@@ -6,14 +6,14 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import userApi from '~/api/user.api';
-import FormGroup from '~/components/common/FormGroup';
-import { IconUser } from '~/components/icon/Icon';
-import Input from '~/components/input/Input';
-import TogglePassword from '~/components/toogle/TogglePassword';
-import { JWTType } from '~/data/Interface';
-import useToggleValue from '~/hooks/useToggleValue';
-import { update } from '~/redux/userSlice';
+import userApi from '@/api/user.api';
+import FormGroup from '@/components/common/FormGroup';
+import { IconUser } from '@/components/icon/Icon';
+import Input from '@/components/input/Input';
+import TogglePassword from '@/components/toogle/TogglePassword';
+import { JWTType } from '@/data/Interface';
+import useToggleValue from '@/hooks/useToggleValue';
+import { update } from '@/redux/userSlice';
 
 const schame = Yup.object({
     email: Yup.string()

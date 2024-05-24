@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import userApi from '~/api/user.api';
-import { IconCheck, IconPen } from '~/components/icon/Icon';
-import classNames from '~/utils/classNames';
+import userApi from '@/api/user.api';
+import { IconCheck, IconPen } from '@/components/icon/Icon';
+import classNames from '@/utils/classNames';
 import jwtDecode from 'jwt-decode';
-import { JWTType } from '~/data/Interface';
+import { JWTType } from '@/data/Interface';
 import { toast } from 'react-toastify';
 
 const CardAvt = () => {

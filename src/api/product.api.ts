@@ -1,4 +1,4 @@
-import { Product, SearchParams } from '~/data/Interface';
+import { Product, SearchParams } from '@/data/Interface';
 import AxiosClient from './axiosClient/AxiosClient';
 
 const ProductAPI = {

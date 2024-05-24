@@ -1,4 +1,4 @@
-import { Category } from '~/data/Interface';
+import { Category } from '@/data/Interface';
 import AxiosClient from './axiosClient/AxiosClient';
 
 const CategoryAPI = {

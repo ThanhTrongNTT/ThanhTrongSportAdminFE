@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import userApi from '~/api/user.api';
-import ButtonCancel from '~/components/button/ButtonCancel';
-import ButtonSubmit from '~/components/button/ButtonSubmit';
-import DropdownIcon from '~/components/dropdown/DropdownIcon';
-import FieldUpdateProfile from '~/components/field/FieldUpdateProfile';
+import userApi from '@/api/user.api';
+import ButtonCancel from '@/components/button/ButtonCancel';
+import ButtonSubmit from '@/components/button/ButtonSubmit';
+// import DropdownIcon from '@/components/dropdown/DropdownIcon';
+import FieldUpdateProfile from '@/components/field/FieldUpdateProfile';
 import {
     IconCake,
     IconEmail,
@@ -15,12 +15,12 @@ import {
     IconHouse,
     IconName,
     IconPenUnderline,
-} from '~/components/icon/Icon';
-import Logo from '~/components/logo/Logo';
-import LogoDefault from '~/components/logo/LogoDefault';
-import { JWTType } from '~/data/Interface';
-import CardAvt from '~/modules/card/CardAvt';
-import classNames from '~/utils/classNames';
+} from '@/components/icon/Icon';
+import Logo from '@/components/logo/Logo';
+import LogoDefault from '@/components/logo/LogoDefault';
+import { JWTType } from '@/data/Interface';
+import CardAvt from '@/modules/card/CardAvt';
+import classNames from '@/utils/classNames';
 
 const ProfilePage = () => {
     const navigate = useNavigate();
@@ -237,7 +237,7 @@ const ProfilePage = () => {
                                     >
                                         Gender
                                     </label>
-                                    {user?.gender ? (
+                                    {/* {user?.gender ? (
                                         <DropdownIcon
                                             setValue={setValue}
                                             control={control}
@@ -250,7 +250,7 @@ const ProfilePage = () => {
                                         />
                                     ) : (
                                         ''
-                                    )}
+                                    )} */}
                                 </div>
                             </div>
                         </div>

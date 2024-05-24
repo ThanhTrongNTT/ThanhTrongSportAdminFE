@@ -1,22 +1,22 @@
 import { lazy } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import LayoutDefault from '~/layouts/LayoutDefault';
-import PrivateRoute from '~/routes/privateRoute';
+import LayoutDefault from '@/layouts/LayoutDefault';
+import PrivateRoute from '@/routes/privateRoute';
 
-const DetailLocation = lazy(() => import('~/screens/detail/DetailLocation'));
-const DetailTour = lazy(() => import('~/screens/detail/DetailTour'));
-const DetailUser = lazy(() => import('~/screens/detail/DetailUser'));
-const Home = lazy(() => import('~/screens/home/Home'));
-const ListCategory = lazy(() => import('~/screens/list/ListCategory'));
-const ListOrder = lazy(() => import('~/screens/list/ListOrder'));
-const ListProduct = lazy(() => import('~/screens/list/ListProduct'));
-const ListUser = lazy(() => import('~/screens/list/ListUser'));
-const Login = lazy(() => import('~/screens/login/Login'));
-const NewLocation = lazy(() => import('~/screens/new/NewLocation'));
-const NewTour = lazy(() => import('~/screens/new/NewTour'));
-const NotFound = lazy(() => import('~/screens/notFound/NotFound'));
-const ProfilePage = lazy(() => import('~/screens/profile/ProfilePage'));
-const ListColors = lazy(() => import('~/screens/list/ListColors'));
+const DetailLocation = lazy(() => import('@/screens/detail/DetailLocation'));
+const DetailTour = lazy(() => import('@/screens/detail/DetailTour'));
+const DetailUser = lazy(() => import('@/screens/detail/DetailUser'));
+const Home = lazy(() => import('@/screens/home/Home'));
+const ListCategory = lazy(() => import('@/screens/list/ListCategory'));
+const ListOrder = lazy(() => import('@/screens/list/ListOrder'));
+const ListProduct = lazy(() => import('@/screens/list/ListProduct'));
+const ListUser = lazy(() => import('@/screens/list/ListUser'));
+const Login = lazy(() => import('@/screens/login/Login'));
+const NewLocation = lazy(() => import('@/screens/new/NewLocation'));
+const NewTour = lazy(() => import('@/screens/new/NewTour'));
+const NotFound = lazy(() => import('@/screens/notFound/NotFound'));
+const ProfilePage = lazy(() => import('@/screens/profile/ProfilePage'));
+const ListColors = lazy(() => import('@/screens/list/ListColors'));
 
 const DeclareRouter = () => {
     return (

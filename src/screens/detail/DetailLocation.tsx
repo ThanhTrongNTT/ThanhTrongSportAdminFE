@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import locationApi from '~/api/order.api';
-import WrapperField from '~/components/common/WrapperField';
-import Dropdown from '~/components/dropdown/Dropdown';
-import { IconTrash } from '~/components/icon/Icon';
-import InputDefault from '~/components/input/InputDefault';
-import classNames from '~/utils/classNames';
+import locationApi from '@/api/order.api';
+import WrapperField from '@/components/common/WrapperField';
+import Dropdown from '@/components/dropdown/Dropdown';
+import { IconTrash } from '@/components/icon/Icon';
+import InputDefault from '@/components/input/InputDefault';
+import classNames from '@/utils/classNames';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import { Modal } from 'flowbite-react';

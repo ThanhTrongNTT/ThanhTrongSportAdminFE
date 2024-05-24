@@ -1,9 +1,9 @@
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { IconMyProfile, IconSigout } from '~/components/icon/Icon';
-import WrapperMenu from '~/components/wrapper/WrapperMenu';
-import { update } from '~/redux/userSlice';
+import { IconMyProfile, IconSigout } from '@/components/icon/Icon';
+import WrapperMenu from '@/components/wrapper/WrapperMenu';
+import { update } from '@/redux/userSlice';
 
 const Menu = () => {
     const dispatch = useDispatch();

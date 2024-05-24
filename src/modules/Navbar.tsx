@@ -1,11 +1,10 @@
 import Tippy from '@tippyjs/react/headless';
 import queryString from 'query-string';
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Avt from '~/components/avt/Avt';
-import { IconArrowDown, IconSearch, IconSignIn } from '~/components/icon/Icon';
-import { RootState } from '~/redux/store';
+import Avt from '@/components/avt/Avt';
+import { IconArrowDown, IconSignIn } from '@/components/icon/Icon';
+import { RootState } from '@/redux/store';
 import Menu from './menu/Menu';
 
 const Navbar = () => {

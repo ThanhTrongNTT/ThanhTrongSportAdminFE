@@ -2,10 +2,10 @@ import { Modal, Pagination } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import locationApi from '~/api/order.api';
-import { IconAdd } from '~/components/icon/Icon';
+import locationApi from '@/api/order.api';
+import { IconAdd } from '@/components/icon/Icon';
 import NewLocation from '../new/NewLocation';
-import ProductCard from '~/components/itemCard/productCard/ProductCard';
+import ProductCard from '@/components/itemCard/productCard/ProductCard';
 
 const ListProduct = () => {
     const [currentPage, setCurrentPage] = useState(1);

@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageCustom from '~/components/image/ImageCustom';
+import ImageCustom from '@/components/image/ImageCustom';
 
 const ProductCard = () => {
     return (

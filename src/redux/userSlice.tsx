@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import userApi from '~/api/user.api';
+import userApi from '@/api/user.api';
 
 export const userLogin = createAsyncThunk('user/login', async (loginRequest: string) => {
     //thunkAPI.dispatch();

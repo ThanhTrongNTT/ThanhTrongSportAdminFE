@@ -1,16 +1,17 @@
-import { Button, Pagination } from 'flowbite-react';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { IconAdd } from '~/components/icon/Icon';
-import InputDefault from '~/components/input/InputDefault';
-import Modal from '~/components/modal/Modal';
-import classNames from '~/utils/classNames';
+import { Button, Pagination } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { IconAdd } from "@/components/icon/Icon";
+import InputDefault from "@/components/input/InputDefault";
+import Modal from "@/components/modal/Modal";
+import classNames from "@/utils/classNames";
+import NewProductColor from "../new/NewProductColor";
 
 const ListColors = () => {
     const [modalNew, setModalNew] = useState(false);
-    const [name, setName] = useState('');
-    const [code, setCode] = useState('');
+    const [name, setName] = useState("");
+    const [code, setCode] = useState("");
     const [modalUpdate, setModalUpdate] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [colors, setColors] = useState([]);
@@ -20,8 +21,8 @@ const ListColors = () => {
     const [isLoadData, setIsLoadData] = useState(true);
     const [colorCurrent, setColorCurrent] = useState({
         id: 1,
-        colorName: 'Black',
-        colorValue: '#000000',
+        colorName: "Black",
+        colorValue: "#000000",
         isDelete: false,
     });
     const size = 5;
@@ -33,7 +34,13 @@ const ListColors = () => {
         setIsLoadData(false);
         const orders: string[] = [];
         const filter: string[] = [];
-        const data = { orders, filter, size, totalElement, pageNumber: currentPage };
+        const data = {
+            orders,
+            filter,
+            size,
+            totalElement,
+            pageNumber: currentPage,
+        };
         // productColorApi.getAllProductColor(data).then((res: any) => {
         //     setTotalElement(Number(res.result.page.totalElement));
         //     setColors(res.result.data);
@@ -100,24 +107,24 @@ const ListColors = () => {
 
     return (
         <>
-            <div className='p-2 h-screen'>
+            <div className="p-2 h-screen">
                 <div>
                     <button
-                        className='flex items-center text-black bg-white p-1 mx-8 my-2 rounded-2xl border border-gray-c4'
+                        className="flex items-center text-black bg-white p-1 mx-8 my-2 rounded-2xl border border-gray-c4"
                         onClick={() => {
                             setModalNew(true);
                         }}
                     >
                         <IconAdd />
-                        <span className='flex items-center mr-2'>Add New</span>
+                        <span className="flex items-center mr-2">Add New</span>
                     </button>
                 </div>
                 <Modal isVisible={modalNew} onClose={onCloseNew}>
                     <div>
-                        <span className='flex justify-center items-center font-semibold text-xl p-4'>
-                            Add New Color
-                        </span>
-                        <NewProductColor onSubmit={newColorHandler} onCancel={onCloseNew} />
+                        <NewProductColor
+                            onSubmit={newColorHandler}
+                            onCancel={onCloseNew}
+                        />
                     </div>
                 </Modal>
                 {/* <Modal/>
@@ -159,17 +166,17 @@ const ListColors = () => {
                         </div>
                     </Modal.Body>
                 </Modal> */}
-                <div className='overflow-x-auto rounded-2xl border mx-4 border-gray-c4'>
-                    <table className='bg-white  w-full text-sm text-left text-gray-400'>
+                <div className="overflow-x-auto rounded-2xl border mx-4 border-gray-c4">
+                    <table className="bg-white  w-full text-sm text-left text-gray-400">
                         <thead>
                             <tr>
-                                <th scope='col' className='py-3 px-6'>
+                                <th scope="col" className="py-3 px-6">
                                     Color Name
                                 </th>
-                                <th scope='col' className='px-6'>
+                                <th scope="col" className="px-6">
                                     Color Value
                                 </th>
-                                <th scope='col' className='px-6 text-center'>
+                                <th scope="col" className="px-6 text-center">
                                     Action
                                 </th>
                             </tr>
@@ -177,37 +184,46 @@ const ListColors = () => {
                         <tbody>
                             {colors.map((color: any, index) => (
                                 <tr
-                                    className='bg-white border-gray-c4 hover:bg-gray-c2 cursor-pointer'
+                                    className="bg-white border-gray-c4 hover:bg-gray-c2 cursor-pointer"
                                     key={index}
                                 >
                                     <th
-                                        scope='row'
-                                        className='py-4 px-6 font-medium text-black whitespace-nowrap'
+                                        scope="row"
+                                        className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                     >
                                         {color.colorName}
                                     </th>
                                     <th
-                                        scope='row'
-                                        className='py-4 px-6 font-medium whitespace-nowrap'
+                                        scope="row"
+                                        className="py-4 px-6 font-medium whitespace-nowrap"
                                     >
-                                        <span style={{ backgroundColor: color.colorValue }}>
+                                        <span
+                                            style={{
+                                                backgroundColor:
+                                                    color.colorValue,
+                                            }}
+                                        >
                                             {color.colorValue.toUpperCase()}
                                         </span>
                                     </th>
                                     <th
-                                        scope='row'
-                                        className='py-4 px-6 font-medium text-black whitespace-nowrap'
+                                        scope="row"
+                                        className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                     >
-                                        <div className='text-center'>
+                                        <div className="text-center">
                                             <span
-                                                className='text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2'
-                                                onClick={() => onCloseUpdate(color)}
+                                                className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
+                                                onClick={() =>
+                                                    onCloseUpdate(color)
+                                                }
                                             >
                                                 Update
                                             </span>
                                             <span
-                                                className='text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2'
-                                                onClick={() => onCloseDelete(color)}
+                                                className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
+                                                onClick={() =>
+                                                    onCloseDelete(color)
+                                                }
                                             >
                                                 Delete
                                             </span>
@@ -218,7 +234,7 @@ const ListColors = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className='flex justify-center'>
+                <div className="flex justify-center">
                     <Pagination
                         showIcons={true}
                         currentPage={1}

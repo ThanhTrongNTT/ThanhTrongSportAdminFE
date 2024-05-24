@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import locationApi from '~/api/order.api';
-import WrapperField from '~/components/common/WrapperField';
-import Dropdown from '~/components/dropdown/Dropdown';
-import { IconTrash } from '~/components/icon/Icon';
-import InputDefault from '~/components/input/InputDefault';
-import classNames from '~/utils/classNames';
+import locationApi from '@/api/order.api';
+import WrapperField from '@/components/common/WrapperField';
+import Dropdown from '@/components/dropdown/Dropdown';
+import { IconTrash } from '@/components/icon/Icon';
+import InputDefault from '@/components/input/InputDefault';
+import classNames from '@/utils/classNames';
 
 const NewLocation = () => {
     const [disable, setDisable] = useState(true);

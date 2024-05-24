@@ -2,7 +2,7 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { useController } from 'react-hook-form';
 import ErrorBoundary from '../common/ErrorBoundary';
 
-import classNames from '~/utils/classNames';
+import classNames from '@/utils/classNames';
 
 type InputProps = {
     pointer?: any;

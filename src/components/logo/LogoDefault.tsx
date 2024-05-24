@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import classNames from '~/utils/classNames';
+import classNames from '@/utils/classNames';
 
 const LogoDefault = ({ className = '' }) => {
     return (

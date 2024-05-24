@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Navbar, SideBar } from '~/modules';
+import { Navbar, SideBar } from '@/modules';
 
 const LayoutDefault = () => {
     // const dispatch = useDispatch();

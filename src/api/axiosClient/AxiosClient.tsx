@@ -6,8 +6,7 @@ import { toast } from 'react-toastify';
 // Please have a look at here `https://github.com/axios/axios#request-config` for the full list of configs
 
 const AxiosClient = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-    // baseURL: 'http://localhost:8080/api/v1',
+    baseURL: 'http://localhost:8080/api/v1',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -58,7 +57,7 @@ AxiosClient.interceptors.response.use(
                 },
             };
             const newAccessToken = await axios.post(
-                `${process.env.REACT_APP_API_URL}token/${refreshToken}`,
+                `http://localhost:8080/api/v1/token/${refreshToken}`,
                 config,
             );
             if (newAccessToken.data.accessToken) {

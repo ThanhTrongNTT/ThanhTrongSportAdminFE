@@ -1,4 +1,4 @@
-import classNames from '~/utils/classNames';
+import classNames from '@/utils/classNames';
 import InputProfile from '../input/InputProfile';
 import Label from '../label/Label';
 

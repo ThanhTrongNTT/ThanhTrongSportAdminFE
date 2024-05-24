@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from '~/utils/classNames';
+import classNames from '@/utils/classNames';
 
 const WrapperMenu = ({ className, children }: any) => {
     return (

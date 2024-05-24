@@ -1,5 +1,5 @@
-import { createContext, useMemo, useState } from 'react';
-import { User } from '~/data/Interface';
+import { createContext, useState } from 'react';
+import { User } from '@/data/Interface';
 
 type PropsType = {
     children: React.ReactNode;

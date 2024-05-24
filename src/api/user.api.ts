@@ -1,4 +1,4 @@
-import { ChangePasswordRequest, SearchParams, User } from '~/data/Interface';
+import { ChangePasswordRequest, SearchParams, User } from '@/data/Interface';
 import AxiosClient from './axiosClient/AxiosClient';
 
 const userApi = {

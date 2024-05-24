@@ -2,10 +2,10 @@ import { Modal, Pagination } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import tourApi from '~/api/category.api';
-import { IconAdd } from '~/components/icon/Icon';
+import tourApi from '@/api/category.api';
+import { IconAdd } from '@/components/icon/Icon';
 import NewTour from '../new/NewTour';
-import OrderCard from '~/components/itemCard/OrderCard/OrderCard';
+import OrderCard from '@/components/itemCard/OrderCard/OrderCard';
 
 const ListOrder = () => {
     const navigate = useNavigate();
