@@ -1,6 +1,6 @@
-import Widget from '~/components/widget/Widget';
-import { IconClient, IconGlobalUser, IconMoney, IconSale } from '~/components/icon/Icon';
 import Chart from 'react-apexcharts';
+import { IconClient, IconGlobalUser, IconMoney, IconSale } from '~/components/icon/Icon';
+import Widget from '~/components/widget/Widget';
 
 const widgets = [
     { title: `TODAY'S MONEY`, content: '$53,00', percent: 55, icon: <IconMoney /> },
@@ -26,7 +26,7 @@ const Home = () => {
     };
     return (
         <>
-            <div>
+            <div className='bg-transparent'>
                 <div className='flex p-4 bg-transparent m-2 rounded-lg'>
                     <div className='flex'>
                         {widgets.map((widget, index) => (

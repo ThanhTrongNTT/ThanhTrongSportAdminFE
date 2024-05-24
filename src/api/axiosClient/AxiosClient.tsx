@@ -1,6 +1,5 @@
 // api/axiosClient.js
 import axios, { AxiosRequestConfig } from 'axios';
-import userApi from '../user.api';
 import { toast } from 'react-toastify';
 // Set up default config for http requests here
 
@@ -20,7 +19,6 @@ AxiosClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
             ...config.headers,
             Authorization: `Bearer ${accessToken}`,
         };
-    // console.log('config ne: ', config);
     return await config;
 });
 AxiosClient.interceptors.response.use(
@@ -34,7 +32,7 @@ AxiosClient.interceptors.response.use(
         console.log(error);
         if (!error.response.data) {
             toast.error(error.message, {
-                delay: 10,
+                delay: 500,
                 draggable: true,
                 pauseOnHover: false,
             });

@@ -15,12 +15,6 @@ const Navbar = () => {
         <>
             <div className='flex h-8 bg-transparent mt-3 justify-end'>
                 <div className='flex'>
-                    <div className='flex bg-white rounded-lg p-2 items-center'>
-                        <span className='cursor-pointer px-2'>
-                            <IconSearch />
-                        </span>
-                        <input type='text' className='outline-none' />
-                    </div>
                     {admin ? (
                         ''
                     ) : (
@@ -37,7 +31,7 @@ const Navbar = () => {
                             <Avt
                                 sx='default'
                                 src={
-                                    userInfo?.avatar.replaceAll('"', '') ||
+                                    // userInfo?.avatar.replaceAll('"', '') ||
                                     'https://images.unsplash.com/photo-1441123694162-e54a981ceba5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80'
                                 }
                             />
@@ -48,7 +42,7 @@ const Navbar = () => {
                                     delay={[0, 200]}
                                     offset={[0, 10]}
                                     // visible
-                                    render={(attrs) => (
+                                    render={(attrs: any) => (
                                         <div
                                             className='w-[238px] rounded-2xl'
                                             tabIndex={-1}

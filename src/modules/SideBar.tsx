@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     IconBlog,
     IconCategory,
+    IconColors,
     IconCourse,
     IconDashboard,
     IconUser,
@@ -12,15 +13,17 @@ import LogoDefault from '~/components/logo/LogoDefault';
 const SideBar = () => {
     const Menus = [
         { title: 'Dashboard', link: '/admin' },
-        { title: 'Users', link: 'users', icon: <IconUser /> },
+        { title: 'User', link: 'user', icon: <IconUser /> },
         {
-            title: 'Locations',
-            link: 'locations',
+            title: 'Product',
+            link: 'product',
             icon: <IconBlog />,
         },
-        { title: 'Tours', link: 'tours', icon: <IconCourse /> },
-        { title: 'Bookings', link: 'bookings', icon: <IconCategory /> },
+        { title: 'Category', link: 'category', icon: <IconCourse /> },
+        { title: 'Order', link: 'order', icon: <IconCategory /> },
+        { title: 'Colors', link: 'colors', icon: <IconColors /> },
     ];
+    const navigate = useNavigate();
     return (
         <div className='bg-white h-fit rounded-xl m-4 w-20 lg:w-60 fixed top-0'>
             <div className='flex justify-center p-10'>
@@ -35,6 +38,9 @@ const SideBar = () => {
                             <li
                                 key={index}
                                 className='text-black text-sm flex font-OpenSans items-center gap-x-4 cursor-pointer p-2 hover:bg-gray-c2 rounded-md mt-2 justify-between'
+                                onClick={() => {
+                                    navigate(menu.link);
+                                }}
                             >
                                 <Link to={menu.link} className='flex items-center'>
                                     <span className='text-2l block float-left'>

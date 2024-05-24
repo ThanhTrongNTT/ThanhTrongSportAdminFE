@@ -42,6 +42,8 @@ function Login() {
         const { email, password } = values;
         navigate('/admin');
 
+        // Thực thiện chức năng Login
+
         // const data: any = await userApi.login(email, password);
         // // if (data.response?.status === 400) {
         // //     toast.error(data.response?.data.message, {
@@ -86,6 +88,7 @@ function Login() {
     };
 
     const { value: showPassword, handleToggleValue: handleTogglePassword } = useToggleValue();
+
     const {
         handleSubmit,
         control,
@@ -94,6 +97,7 @@ function Login() {
         resolver: yupResolver(schame),
         mode: 'onSubmit',
     });
+    // Show error nếu có lỗi xảy ra
     useEffect(() => {
         const arrErrors = Object.values(errors);
         if (arrErrors.length > 0) {
@@ -109,7 +113,7 @@ function Login() {
         }
     }, [errors]);
     return (
-        <div className='flex bg-transparent w-full h-full'>
+        <div className='flex bg-transparent w-full h-screen'>
             <div className='flex flex-col items-center m-auto p-5 bg-white rounded-2xl shadow-lg w-[40%]'>
                 <IconUser />
                 <Link to={'/admin'}>

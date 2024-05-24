@@ -48,12 +48,12 @@ const CardAvt = () => {
 
     const onSubmit = async ({ avatar }: any) => {
         console.log(user);
-        userApi.updateAvatar(user.sub, avatar).then((response) => {
-            console.log(response);
-            toast.error('Update success!', {
-                autoClose: 500,
-            });
-        });
+        // userApi.updateAvatar(user.sub, avatar).then((response) => {
+        //     console.log(response);
+        //     toast.error('Update success!', {
+        //         autoClose: 500,
+        //     });
+        // });
         userApi.getMe(user.sub).then((response) => {
             setUserMain(response);
         });

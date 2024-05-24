@@ -1,4 +1,4 @@
-import { Address, ChangePasswordRequest, User } from '~/data/Interface';
+import { ChangePasswordRequest, SearchParams, User } from '~/data/Interface';
 import AxiosClient from './axiosClient/AxiosClient';
 
 const userApi = {
@@ -8,10 +8,6 @@ const userApi = {
     },
     getUsers: (pageNo: number, pageSize: number, sortBy: string, sortDir: string) => {
         const url = `users/paging?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
-        return AxiosClient.get(url);
-    },
-    getUserByName: (name: string) => {
-        const url = `users/name/${name}`;
         return AxiosClient.get(url);
     },
     getById: (id: string) => {
@@ -26,14 +22,8 @@ const userApi = {
         const url = `user/${id}`;
         return AxiosClient.delete(url);
     },
-    searchUser: (
-        search: string,
-        pageNo: number,
-        pageSize: number,
-        sortBy: string,
-        sortDir: string,
-    ) => {
-        const url = `users/search-by-name?keyword=${search}&pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
+    searchUser: (searchParam: SearchParams) => {
+        const url = `users/search-by-name?keyword=${searchParam.keyWord}&pageNo=${searchParam.pageNo}&pageSize=${searchParam.pageSize}&sortBy=${searchParam.sortBy}&sortDir=${searchParam.sortDir}`;
         return AxiosClient.get(url);
     },
     // updateAvatar: (email: string, avatar: string) => {

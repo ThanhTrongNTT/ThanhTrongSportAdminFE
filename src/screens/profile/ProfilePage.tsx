@@ -99,7 +99,7 @@ const ProfilePage = () => {
             };
             console.log(userUpdate);
 
-            await userApi.updateProfile(userUpdate).then((responseUser) => {
+            await userApi.updateProfile(userUpdate, user.email).then((responseUser) => {
                 setResponse(responseUser);
             });
             setDisableBtnSubmit(!disableBtnSubmit);

@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import storage from '~/api/firebase';
-import locationApi from '~/api/location.api';
-import tourApi from '~/api/tour.api';
+import locationApi from '~/api/order.api';
+import tourApi from '~/api/category.api';
 import Dropdown from '~/components/dropdown/Dropdown';
 import Field from '~/components/field/Field';
 import Label from '~/components/label/Label';
@@ -56,28 +56,28 @@ const NewTour = () => {
             .catch((err) => console.log(err));
     };
     const onSubmit = ({ beginningLocation, destinationLocation, type, ...values }: any) => {
-        const tour = {
-            tourDetail: {
-                ...values,
-                beginningLocation: {
-                    locationName: beginningLocation,
-                    locationType: 'BEGINNING',
-                },
-                destinationLocation: {
-                    locationName: destinationLocation,
-                    locationType: 'DESTINATION',
-                },
-                images: urls,
-            },
-            type,
-        };
-        console.log('TCL: NewTour -> tour', tour);
-        tourApi
-            .saveTour(tour)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((errr) => console.log(errr));
+        // const tour = {
+        //     tourDetail: {
+        //         ...values,
+        //         beginningLocation: {
+        //             locationName: beginningLocation,
+        //             locationType: 'BEGINNING',
+        //         },
+        //         destinationLocation: {
+        //             locationName: destinationLocation,
+        //             locationType: 'DESTINATION',
+        //         },
+        //         images: urls,
+        //     },
+        //     type,
+        // };
+        // console.log('TCL: NewTour -> tour', tour);
+        // tourApi
+        //     .saveTour(tour)
+        //     .then((response) => {
+        //         console.log(response);
+        //     })
+        //     .catch((errr) => console.log(errr));
     };
     type Location = {
         id: string;
@@ -85,19 +85,19 @@ const NewTour = () => {
         locationType: string;
     };
     useEffect(() => {
-        const getData = async () => {
-            await locationApi.getLocationByType('BEGINNING').then((reponse) => {
-                reponse.data.map((item: Location) => {
-                    setBeginning((prev: any) => [...prev, item.locationName]);
-                });
-            });
-            await locationApi.getLocationByType('DESTINATION').then((reponse) => {
-                reponse.data.map((item: Location) => {
-                    setDestination((prev: any) => [...prev, item.locationName]);
-                });
-            });
-        };
-        getData();
+        // const getData = async () => {
+        //     await locationApi.getLocationByType('BEGINNING').then((reponse) => {
+        //         reponse.data.map((item: Location) => {
+        //             setBeginning((prev: any) => [...prev, item.locationName]);
+        //         });
+        //     });
+        //     await locationApi.getLocationByType('DESTINATION').then((reponse) => {
+        //         reponse.data.map((item: Location) => {
+        //             setDestination((prev: any) => [...prev, item.locationName]);
+        //         });
+        //     });
+        // };
+        // getData();
     }, []);
 
     return (

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import locationApi from '~/api/location.api';
+import locationApi from '~/api/order.api';
 import WrapperField from '~/components/common/WrapperField';
 import Dropdown from '~/components/dropdown/Dropdown';
 import { IconTrash } from '~/components/icon/Icon';
@@ -48,15 +48,15 @@ const NewLocation = () => {
             };
             // console.log(locationUpdate);
 
-            await locationApi.saveLocation(locationUpdate).then((response) => {
-                toast.success('Add success!', {
-                    autoClose: 1000,
-                    delay: 50,
-                    draggable: false,
-                    pauseOnHover: false,
-                });
-                window.location.reload();
-            });
+            // await locationApi.saveLocation(locationUpdate).then((response) => {
+            //     toast.success('Add success!', {
+            //         autoClose: 1000,
+            //         delay: 50,
+            //         draggable: false,
+            //         pauseOnHover: false,
+            //     });
+            //     window.location.reload();
+            // });
         }
     };
 

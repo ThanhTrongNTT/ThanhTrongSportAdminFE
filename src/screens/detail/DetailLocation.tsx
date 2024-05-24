@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import locationApi from '~/api/location.api';
+import locationApi from '~/api/order.api';
 import WrapperField from '~/components/common/WrapperField';
 import Dropdown from '~/components/dropdown/Dropdown';
 import { IconTrash } from '~/components/icon/Icon';
@@ -33,11 +33,11 @@ const DetailLocation = () => {
     };
     if (isSubmitSuccessful) handleCancel();
     useEffect(() => {
-        locationApi
-            .getLocationById(queryString.stringify(locationId).replace('locationId=', ''))
-            .then((response) => {
-                setLocation(response);
-            });
+        // locationApi
+        //     .getLocationById(queryString.stringify(locationId).replace('locationId=', ''))
+        //     .then((response) => {
+        //         setLocation(response);
+        //     });
     }, []);
     setValue('locationName', location?.locationName);
     const onSubmit = async (values: any) => {
@@ -67,19 +67,19 @@ const DetailLocation = () => {
 
         console.log(locationUpdate);
         console.log(queryString.stringify(locationId).replace('locationId=', ''));
-        await locationApi
-            .updateLocation(
-                queryString.stringify(locationId).replace('locationId=', ''),
-                locationUpdate,
-            )
-            .then((response) => {
-                toast.success('Update success!', {
-                    autoClose: 1000,
-                    delay: 50,
-                    draggable: false,
-                    pauseOnHover: false,
-                });
-            });
+        // await locationApi
+        //     .updateLocation(
+        //         queryString.stringify(locationId).replace('locationId=', ''),
+        //         locationUpdate,
+        //     )
+        //     .then((response) => {
+        //         toast.success('Update success!', {
+        //             autoClose: 1000,
+        //             delay: 50,
+        //             draggable: false,
+        //             pauseOnHover: false,
+        //         });
+        //     });
         navigate('../');
     };
     return (

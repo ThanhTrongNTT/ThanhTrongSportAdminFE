@@ -3,12 +3,11 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import storage from '~/api/firebase';
-import locationApi from '~/api/location.api';
-import tourApi from '~/api/tour.api';
+import locationApi from '~/api/order.api';
+import tourApi from '~/api/category.api';
 import Dropdown from '~/components/dropdown/Dropdown';
 import Field from '~/components/field/Field';
 import Label from '~/components/label/Label';
-import { Location } from '~/data/Interface';
 import classNames from '~/utils/classNames';
 import queryString from 'query-string';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
@@ -91,36 +90,36 @@ const DetailTour = () => {
         }
         // console.log(tourUpdate);
         else {
-            tourApi
-                .updateTour(tourUpdate, queryString.stringify(tourId).replace('tourId=', ''))
-                .then((response) => {
-                    toast.success('Update success', {
-                        autoClose: 500,
-                    });
-                })
-                .catch((err) => console.log(err));
+            // tourApi
+            //     .updateTour(tourUpdate, queryString.stringify(tourId).replace('tourId=', ''))
+            //     .then((response) => {
+            //         toast.success('Update success', {
+            //             autoClose: 500,
+            //         });
+            //     })
+            //     .catch((err) => console.log(err));
             navigate('../');
         }
     };
     useEffect(() => {
-        const getData = async () => {
-            await locationApi.getLocationByType('BEGINNING').then((reponse) => {
-                reponse.data.map((item: Location) => {
-                    setBeginning((prev: any) => [...prev, item.locationName]);
-                });
-            });
-            await locationApi.getLocationByType('DESTINATION').then((reponse) => {
-                reponse.data.map((item: Location) => {
-                    setDestination((prev: any) => [...prev, item.locationName]);
-                });
-            });
-            await tourApi
-                .getTourById(queryString.stringify(tourId).replace('tourId=', ''))
-                .then((response) => {
-                    setTour(response);
-                });
-        };
-        getData();
+        // const getData = async () => {
+        //     await locationApi.getLocationByType('BEGINNING').then((reponse) => {
+        //         reponse.data.map((item: Location) => {
+        //             setBeginning((prev: any) => [...prev, item.locationName]);
+        //         });
+        //     });
+        //     await locationApi.getLocationByType('DESTINATION').then((reponse) => {
+        //         reponse.data.map((item: Location) => {
+        //             setDestination((prev: any) => [...prev, item.locationName]);
+        //         });
+        //     });
+        //     await tourApi
+        //         .getTourById(queryString.stringify(tourId).replace('tourId=', ''))
+        //         .then((response) => {
+        //             setTour(response);
+        //         });
+        // };
+        // getData();
     }, []);
     setValue('tourName', tour?.tourDetail.tourName);
     setValue('tourDes', tour?.tourDetail.tourDes);

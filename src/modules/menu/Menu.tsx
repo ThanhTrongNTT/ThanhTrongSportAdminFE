@@ -20,8 +20,9 @@ const Menu = () => {
                 userInfo: null,
             }),
         );
-
-        window.location.reload();
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     };
     return (
         <WrapperMenu>

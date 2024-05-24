@@ -3,7 +3,7 @@ export interface User {
     userName: string;
     email: string;
     password: string;
-    activeFlag: Address;
+    activeFlag: boolean;
     removalFlag: boolean;
     role: Role[];
     userProfile: UserProfile;
@@ -17,50 +17,26 @@ export interface UserProfile {
     removalFlag: boolean;
 }
 
+export interface Product {
+    id: string;
+    productName: string;
+    description: string;
+    price: number;
+    quantity: number;
+    category: Category;
+    removalFlag: boolean;
+}
+
+export interface Category {
+    id: string;
+    categoryName: string;
+    description: string;
+    removalFlag: boolean;
+}
+
 export interface Role {
     id: string;
     roleName: string;
-}
-
-export interface Address {
-    street: string;
-    district: string;
-    city: string;
-}
-
-export interface Tour {
-    id?: string;
-    hotelRoom?: number;
-    flightClass?: number;
-    tourDetail?: TourDetail;
-    type?: string;
-}
-export interface TourDetail {
-    tourName?: string;
-    tourDes?: string;
-    price?: number;
-    images?: string[];
-    startDay?: string;
-    endDay?: string;
-    beginningLocation?: {
-        locationName: string;
-        locationType: 'BEGINNING';
-    };
-    destinationLocation?: {
-        locationName: string;
-        locationType: 'DESTINATION';
-    };
-}
-export interface Location {
-    id?: string;
-    locationName: string;
-    locationType: string;
-}
-export interface Booking {
-    id: string;
-    user: User;
-    tour: Tour;
-    enable: boolean;
 }
 
 export interface Pagination {
@@ -81,4 +57,12 @@ export interface ChangePasswordRequest {
     email: string;
     oldPassword: string;
     newPassword: string;
+}
+
+export interface SearchParams {
+    keyWord: string;
+    pageNo: number;
+    pageSize: number;
+    sortBy: string;
+    sortDir: string;
 }
