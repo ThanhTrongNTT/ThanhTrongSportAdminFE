@@ -1,13 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
 import {
     IconBlog,
     IconCategory,
-    IconColors,
     IconCourse,
     IconDashboard,
+    IconSize,
     IconUser,
 } from "@/components/icon/Icon";
 import LogoDefault from "@/components/logo/LogoDefault";
+import { Link, useNavigate } from "react-router-dom";
 
 const SideBar = () => {
     const Menus = [
@@ -20,44 +20,34 @@ const SideBar = () => {
         },
         { title: "Category", link: "category", icon: <IconCourse /> },
         { title: "Order", link: "order", icon: <IconCategory /> },
-        { title: "Colors", link: "colors", icon: <IconColors /> },
+        { title: "Size", link: "size", icon: <IconSize /> },
     ];
     const navigate = useNavigate();
     return (
         <div className="bg-white h-fit rounded-xl m-4 w-20 lg:w-60 fixed top-0">
             <div className="flex justify-center p-10">
-                {/* <Logo /> */}
                 <LogoDefault />
             </div>
             <hr className="mx-6 border-1.5 border-gray-c2" />
             <div className="px-6">
                 <ul className="pt-2">
                     {Menus.map((menu, index) => (
-                        <>
-                            <li
-                                key={index}
-                                className="text-black text-sm flex font-OpenSans items-center gap-x-4 cursor-pointer p-2 hover:bg-gray-c2 rounded-md mt-2 justify-between"
-                                onClick={() => {
-                                    navigate(menu.link);
-                                }}
-                            >
-                                <Link
-                                    to={menu.link}
-                                    className="flex items-center"
-                                >
-                                    <span className="text-2l block float-left">
-                                        {menu.icon ? (
-                                            menu.icon
-                                        ) : (
-                                            <IconDashboard />
-                                        )}
-                                    </span>
-                                    <span className="text-base font-OpenSans font-medium flex-1 duration-200">
-                                        {menu.title}
-                                    </span>
-                                </Link>
-                            </li>
-                        </>
+                        <li
+                            key={index}
+                            className="text-black text-sm flex font-OpenSans items-center gap-x-4 cursor-pointer p-2 hover:bg-gray-c2 rounded-md mt-2 justify-between"
+                            onClick={() => {
+                                navigate(menu.link);
+                            }}
+                        >
+                            <Link to={menu.link} className="flex items-center">
+                                <span className="text-2l block float-left">
+                                    {menu.icon ? menu.icon : <IconDashboard />}
+                                </span>
+                                <span className="text-base font-OpenSans font-medium flex-1 duration-200">
+                                    {menu.title}
+                                </span>
+                            </Link>
+                        </li>
                     ))}
                 </ul>
             </div>

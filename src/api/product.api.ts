@@ -1,8 +1,14 @@
-import { Product, SearchParams } from '@/data/Interface';
-import AxiosClient from './axiosClient/AxiosClient';
+import { PageResponse, Product, SearchParams } from "@/data/Interface";
+import AxiosClient from "./axiosClient/AxiosClient";
+import { AxiosResponse } from "axios";
 
 const ProductAPI = {
-    getAllProducts: (pageNo: number, pageSize: number, sortBy: string, sortDir: string) => {
+    getAllProducts: (
+        pageNo: number,
+        pageSize: number,
+        sortBy: string,
+        sortDir: string
+    ): Promise<AxiosResponse<PageResponse<Product>>> => {
         const url = `products?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
         return AxiosClient.get(url);
     },
@@ -15,7 +21,7 @@ const ProductAPI = {
         pageNo: number,
         pageSize: number,
         sortBy: string,
-        sortDir: string,
+        sortDir: string
     ) => {
         const url = `products/search-by-category?categoryname=${categoryname}&pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
         return AxiosClient.get(url);
@@ -26,7 +32,7 @@ const ProductAPI = {
         pageNo: number,
         pageSize: number,
         sortBy: string,
-        sortDir: string,
+        sortDir: string
     ) => {
         const url = `products/search-by-price?minPrice=${minPrice}&maxPrice=${maxPrice}&pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
         return AxiosClient.get(url);

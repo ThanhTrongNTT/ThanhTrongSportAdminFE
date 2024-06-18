@@ -1,8 +1,14 @@
-import { Category } from '@/data/Interface';
-import AxiosClient from './axiosClient/AxiosClient';
+import { Category, PageResponse } from "@/data/Interface";
+import AxiosClient from "./axiosClient/AxiosClient";
+import { AxiosResponse } from "axios";
 
 const CategoryAPI = {
-    getAllCategory: (pageNo: number, pageSize: number, sortBy: string, sortDir: string) => {
+    getAllCategory: (
+        pageNo: number,
+        pageSize: number,
+        sortBy: string,
+        sortDir: string
+    ): Promise<AxiosResponse<PageResponse<Category>>> => {
         const url = `categries?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
         return AxiosClient.get(url);
     },

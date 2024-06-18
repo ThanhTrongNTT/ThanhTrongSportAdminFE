@@ -1,20 +1,23 @@
-import { Modal, Pagination } from 'flowbite-react';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import tourApi from '@/api/category.api';
-import { IconAdd } from '@/components/icon/Icon';
-import NewTour from '../new/NewTour';
-import OrderCard from '@/components/itemCard/OrderCard/OrderCard';
+import { Order } from "@/data/Interface";
+import { Pagination } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ListOrder = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const [tours, setTours] = useState<any>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [isModal, setIsModal] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
-    const [idDelete, setIdDelete] = useState('');
+    const [idDelete, setIdDelete] = useState("");
+
+    const orders: Order[] = [
+        {
+            id: "1",
+            totalPrice: 100,
+        },
+    ];
     // Thực hiện lấy data khi vừa khởi tạo
     const getData = async (page: number) => {
         // await tourApi.getTours(page - 1).then((reponse) => {
@@ -58,7 +61,7 @@ const ListOrder = () => {
     // Thực hiện chức năng chỉnh sửa
     const handleEdit = async (id: string) => {
         navigate(`${id}`);
-        toast.success('Edit View!', {
+        toast.success("Edit View!", {
             delay: 50,
             draggable: false,
             pauseOnHover: false,
@@ -72,57 +75,91 @@ const ListOrder = () => {
 
     return (
         <>
-            <div className='p-2 h-screen'>
-                <div>
-                    <button
-                        className='flex items-center text-black bg-white p-1 mx-8 my-2 rounded-2xl border border-gray-c4'
-                        onClick={() => {
-                            setIsModal(true);
-                        }}
-                    >
-                        <IconAdd />
-                        <span className='flex items-center mr-2'>Add New</span>
-                    </button>
+            <div className="">
+                <div className="p-5">
+                    <div className="overflow-x-auto rounded-2xl border mx-4 border-gray-c4 ">
+                        <table className="bg-white w-full text-sm text-left text-gray-400">
+                            <thead>
+                                <tr>
+                                    <th scope="col" className="py-3 px-6">
+                                        Order Id
+                                    </th>
+                                    <th scope="col" className="px-6">
+                                        User Name
+                                    </th>
+                                    <th scope="col" className="px-6">
+                                        Total Price
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 text-center"
+                                    >
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orders.map((order: Order, index) => (
+                                    <tr
+                                        className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
+                                        key={index}
+                                    >
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                        >
+                                            {order.id}
+                                        </th>
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                        >
+                                            {order.user?.userName}
+                                        </th>
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium whitespace-nowrap"
+                                        >
+                                            {order.totalPrice.toLocaleString(
+                                                "vi",
+                                                {
+                                                    style: "currency",
+                                                    currency: "VND",
+                                                }
+                                            )}
+                                        </th>
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                        >
+                                            <div className="text-center">
+                                                <span
+                                                    className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
+                                                    onClick={() => {}}
+                                                >
+                                                    View
+                                                </span>
+                                                <span
+                                                    className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
+                                                    onClick={() => {}}
+                                                >
+                                                    Delete
+                                                </span>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <Modal show={isModal} size='lg' popup={true} onClose={onClose}>
-                    <Modal.Header />
-                    <Modal.Body>
-                        <NewTour />
-                    </Modal.Body>
-                </Modal>
-                <Modal show={isDelete} size='lg' popup={true} onClose={deleteClose}>
-                    <Modal.Header />
-                    <Modal.Body>
-                        <div className='text-center'>
-                            <h3 className='mb-5 text-lg font-normal text-gray-500 dark:text-gray-400'>
-                                Are you sure you want to delete this tour?
-                            </h3>
-                            <div className='flex justify-center gap-4 text-warning'>
-                                <button
-                                    color='failure'
-                                    onClick={() => handleDeleteSuccess(idDelete)}
-                                >
-                                    Yes, I'm sure
-                                </button>
-                                <button color='gray' onClick={deleteClose}>
-                                    No, cancel
-                                </button>
-                            </div>
-                        </div>
-                    </Modal.Body>
-                </Modal>
-                <div className='flex flex-wrap'>
-                    <OrderCard />
-                    <OrderCard />
-                    <OrderCard />
-                    <OrderCard />
-                </div>
-                <div className='flex justify-center'>
+                <div className="flex justify-center">
                     <Pagination
                         showIcons={true}
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={onPageChange}
+                        layout="pagination"
                     />
                 </div>
             </div>

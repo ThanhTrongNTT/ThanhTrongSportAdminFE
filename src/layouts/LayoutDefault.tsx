@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Navbar, SideBar } from '@/modules';
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import { Navbar, SideBar } from "@/modules";
 
 const LayoutDefault = () => {
     // const dispatch = useDispatch();
@@ -16,11 +16,11 @@ const LayoutDefault = () => {
 
     // dispatch(update(userProfile));
     return (
-        <div className='flex bg-transparent'>
-            <div className='flex-initial w-[25%]'>
+        <div className="flex bg-transparent h-screen">
+            <div className="flex-initial w-[25%]">
                 <SideBar />
             </div>
-            <div className='flex flex-col w-full'>
+            <div className="flex flex-col w-full">
                 <Navbar />
                 <Outlet />
             </div>

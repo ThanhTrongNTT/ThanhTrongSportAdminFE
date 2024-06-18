@@ -1,40 +1,17 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import userApi from '@/api/user.api';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import userApi from "@/api/user.api";
+import { User } from "@/data/Interface";
 
-export const userLogin = createAsyncThunk('user/login', async (loginRequest: string) => {
-    //thunkAPI.dispatch();
-    try {
-        // const result = await userApi.login(user.email, user.password);
-        const result = { data: 1231231 };
-        return result.data;
-    } catch (err) {
-        console.log(err);
-    }
-});
+// export const userGetMe = createAsyncThunk("user/getMe", async (email: any) => {
+//     try {
+//         const result = await userApi.getMe(email);
+//         if (result.data) return result.data;
+//         return result;
+//     } catch (err) {
+//         console.log("getMe error$", err);
+//     }
+// });
 
-export const userGetMe = createAsyncThunk('user/getMe', async (email: any) => {
-    try {
-        const result = await userApi.getMe(email);
-        if (result.data) return result.data;
-        return result;
-    } catch (err) {
-        console.log('getMe error$', err);
-    }
-});
-
-interface Role {
-    id: string;
-    roleName: string;
-}
-interface User {
-    id: string;
-    email: string;
-    fullName: string;
-    phoneNumber: string;
-    gender: string;
-    role: Role[] | null;
-    avatar: string;
-}
 interface UserSlice {
     accessToken: string;
     refreshToken: string;
@@ -42,30 +19,46 @@ interface UserSlice {
     error: string;
     message: string;
 }
-const accessToken = localStorage.getItem('accessToken');
-const refreshToken = localStorage.getItem('refreshToken');
+const accessToken = sessionStorage.getItem("accessToken");
+const refreshToken = sessionStorage.getItem("refreshToken");
 const initialState: UserSlice = {
-    accessToken: accessToken || '',
-    refreshToken: refreshToken || '',
+    accessToken: accessToken || "",
+    refreshToken: refreshToken || "",
     userInfo: {
-        id: '',
-        email: '',
-        fullName: '',
-        phoneNumber: '',
-        gender: '',
-        role: null,
-        avatar: '',
+        id: "",
+        userName: "",
+        email: "",
+        password: "",
+        activeFlag: false,
+        removalFlag: false,
+        userProfile: {
+            id: "",
+            firstName: "",
+            lastName: "",
+            avatar: {
+                id: "",
+                fileName: "",
+                fileType: "",
+                url: "",
+                removalFlag: false,
+            },
+            removalFlag: false,
+        },
     },
-    error: '',
-    message: '',
+    error: "",
+    message: "",
 };
 
 const userSlice = createSlice({
-    name: 'user',
+    name: "user",
     initialState,
     reducers: {
         clearUser: (state) => {
             state.userInfo = initialState.userInfo;
+        },
+        updateToken: (state, action) => {
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
         },
         update: (state, action) => {
             state.userInfo = action.payload;
@@ -74,12 +67,16 @@ const userSlice = createSlice({
             state.message = action.payload;
         },
         resetUserState: (state) => {
-            console.log('resetState');
-            state.message = '';
-            state.error = '';
+            console.log("resetState");
+            state.accessToken = "";
+            state.refreshToken = "";
+            state.userInfo = initialState.userInfo;
+            state.message = "";
+            state.error = "";
         },
     },
 });
 
 export default userSlice.reducer;
-export const { clearUser, update, setMessage, resetUserState } = userSlice.actions;
+export const { clearUser, updateToken, update, setMessage, resetUserState } =
+    userSlice.actions;
