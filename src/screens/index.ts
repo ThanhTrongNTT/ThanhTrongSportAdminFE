@@ -5,9 +5,6 @@ import ListProduct from "./list/ListProduct";
 import ListCategory from "./list/ListCategory";
 import ListOrder from "./list/ListOrder";
 import DetailUser from "./detail/DetailUser";
-import DetailLocation from "./detail/DetailLocation";
-import DetailTour from "./detail/DetailTour";
-import NewLocation from "./new/NewLocation";
 import NewTour from "./new/NewProduct";
 
 export {
@@ -18,8 +15,5 @@ export {
     ListProduct,
     ListCategory,
     ListOrder,
-    DetailLocation,
-    DetailTour,
-    NewLocation,
     NewTour,
 };

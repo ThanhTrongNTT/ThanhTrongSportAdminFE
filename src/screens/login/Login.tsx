@@ -2,7 +2,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import jwtDecode from "jwt-decode";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -51,62 +50,62 @@ function Login() {
 
         // Thực thiện chức năng Login
 
-        // await AuthAPI.login(email, password)
-        //     .then(async (res) => {
-        //         const decode: JWTType = jwtDecode(res.data.accessToken);
-        //         if (decode.admin) {
-        //             sessionStorage.setItem("accessToken", res.data.accessToken);
-        //             sessionStorage.setItem(
-        //                 "refreshToken",
-        //                 res.data.refreshToken
-        //             );
-        //             dispatch(
-        //                 updateToken({
-        //                     accessToken: res.data.accessToken,
-        //                     refreshToken: res.data.refreshToken,
-        //                 })
-        //             );
-        //             sessionStorage.setItem("admin", "true");
-        //             await userApi
-        //                 .getMe(decode.sub)
-        //                 .then((res) => {
-        //                     const userProfile: User = res.data;
-        //                     dispatch(update(userProfile));
-        //                     navigate("/admin");
-        //                     toast.success("Login Success!", {
-        //                         autoClose: 500,
-        //                         delay: 10,
-        //                         draggable: true,
-        //                         pauseOnHover: false,
-        //                     });
-        //                 })
-        //                 .catch((err) => {
-        //                     toast.error(err.message, {
-        //                         autoClose: 500,
-        //                         delay: 10,
-        //                         draggable: true,
-        //                         pauseOnHover: false,
-        //                     });
-        //                 });
-        //         } else {
-        //             toast.warning(`You don't have permission`, {
-        //                 autoClose: 500,
-        //                 delay: 10,
-        //                 draggable: true,
-        //                 pauseOnHover: false,
-        //             });
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         if (err.status === 404) {
-        //             toast.error(`User does not esited!`, {
-        //                 autoClose: 500,
-        //                 delay: 10,
-        //                 draggable: true,
-        //                 pauseOnHover: false,
-        //             });
-        //         }
-        //     });
+        await AuthAPI.login(email, password)
+            .then(async (res) => {
+                const decode: JWTType = jwtDecode(res.data.accessToken);
+                if (decode.admin) {
+                    sessionStorage.setItem("accessToken", res.data.accessToken);
+                    sessionStorage.setItem(
+                        "refreshToken",
+                        res.data.refreshToken
+                    );
+                    dispatch(
+                        updateToken({
+                            accessToken: res.data.accessToken,
+                            refreshToken: res.data.refreshToken,
+                        })
+                    );
+                    sessionStorage.setItem("admin", "true");
+                    await userApi
+                        .getMe(decode.sub)
+                        .then((res) => {
+                            const userProfile: User = res.data;
+                            dispatch(update(userProfile));
+                            navigate("/admin");
+                            toast.success("Login Success!", {
+                                autoClose: 500,
+                                delay: 10,
+                                draggable: true,
+                                pauseOnHover: false,
+                            });
+                        })
+                        .catch((err) => {
+                            toast.error(err.message, {
+                                autoClose: 500,
+                                delay: 10,
+                                draggable: true,
+                                pauseOnHover: false,
+                            });
+                        });
+                } else {
+                    toast.warning(`You don't have permission`, {
+                        autoClose: 500,
+                        delay: 10,
+                        draggable: true,
+                        pauseOnHover: false,
+                    });
+                }
+            })
+            .catch((err) => {
+                if (err.status === 404) {
+                    toast.error(`User does not esited!`, {
+                        autoClose: 500,
+                        delay: 10,
+                        draggable: true,
+                        pauseOnHover: false,
+                    });
+                }
+            });
     };
 
     const { value: showPassword, handleToggleValue: handleTogglePassword } =
