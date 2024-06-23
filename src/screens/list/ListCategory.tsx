@@ -2,9 +2,13 @@ import { IconAdd } from "@/components/icon/Icon";
 import Modal from "@/components/modal/Modal";
 import { Category } from "@/data/Interface";
 import { Pagination } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DetailCategory from "../detail/DetailCategory";
 import NewCategory from "../new/NewCategory";
+import ModalDelete from "@/components/modal/ModalDelete";
+import CategoryAPI from "@/api/category.api";
+import { toast } from "react-toastify";
+import { FieldValues } from "react-hook-form";
 
 const ListCategory = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -12,6 +16,8 @@ const ListCategory = () => {
     const [isNewModal, setIsNewModal] = useState(false);
     const [modalUpdate, setModalUpdate] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
+    const [idDeleted, setIdDeleted] = useState<string>("");
+    const [categories, setCategories] = useState<Category[]>([]);
     const [categoryNew, setCategoryNew] = useState<Category>({
         categoryName: "",
         description: "",
@@ -25,8 +31,38 @@ const ListCategory = () => {
         removalFlag: false,
     });
 
+    const getData = async (page: number) => {
+        await CategoryAPI.getAllCategory(page - 1, 5, "id", "asc").then(
+            (response) => {
+                setTotalPage(response.data.totalPages);
+                setCategories(response.data.content);
+            }
+        );
+    };
+
     const onCloseNew = () => {
         setIsNewModal(!isNewModal);
+    };
+
+    const handleCreateNew = (data: FieldValues) => {
+        const categoryNew: Category = {
+            categoryName: data.categoryName,
+            description: data.categoryDescription,
+            id: "",
+            removalFlag: false,
+        };
+        CategoryAPI.addCategory(categoryNew).then((response) => {
+            if (response.data) {
+                onCloseNew();
+                toast.success("Create Category success!", {
+                    autoClose: 1000,
+                    pauseOnHover: false,
+                    draggable: true,
+                    delay: 50,
+                });
+                getData(currentPage);
+            }
+        });
     };
 
     const onClickUpdate = (category: Category) => {
@@ -37,60 +73,80 @@ const ListCategory = () => {
         setModalUpdate(!modalUpdate);
     };
 
+    const handleUpdate = (data: FieldValues) => {
+        const categoryUpdate: Category = {
+            ...category,
+            categoryName: data.categoryName,
+            description: data.categoryDescription,
+        };
+        CategoryAPI.updateCategory(categoryUpdate, category.id).then(
+            (response) => {
+                if (response.data) {
+                    onCloseUpdate();
+                    toast.success("Update Category success!", {
+                        autoClose: 1000,
+                        pauseOnHover: false,
+                        draggable: true,
+                        delay: 50,
+                    });
+                    getData(currentPage);
+                }
+            }
+        );
+    };
+
     const onCloseDelete = () => {
         setModalDelete(!modalDelete);
     };
 
-    const categorys: Category[] = [
-        {
-            categoryName: "Category Trong",
-            description: "Description",
-            id: "1",
-            removalFlag: false,
-        },
-        {
-            categoryName: "Category Thanh",
-            description: "Description",
-            id: "2",
-            removalFlag: false,
-        },
-        {
-            categoryName: "Category Nguyen",
-            description: "Description",
-            id: "3",
-            removalFlag: false,
-        },
-        {
-            categoryName: "Category Test",
-            description: "Description",
-            id: "4",
-            removalFlag: false,
-        },
-    ];
-
-    // setTotalPage(categorys.length);
+    const handleDelete = async (id: string) => {
+        setModalDelete(!modalDelete);
+        await CategoryAPI.deleteCategory(id).then((response) => {
+            if (response.data) {
+                toast.success("Delete Success!", {
+                    autoClose: 500,
+                    delay: 50,
+                    draggable: true,
+                    pauseOnHover: false,
+                });
+                getData(currentPage);
+            }
+        });
+    };
 
     const onPageChange = (page: number) => {
         setCurrentPage(page);
     };
+    useEffect(() => {
+        getData(currentPage);
+    }, [currentPage]);
+
     return (
         <>
             <Modal isVisible={isNewModal} onClose={onCloseNew}>
                 <div>
                     <NewCategory
+                        handleCreateNew={handleCreateNew}
                         category={categoryNew}
                         setCategory={setCategoryNew}
-                        onCloseNew={onCloseNew}
                     />
                 </div>
             </Modal>
             <Modal isVisible={modalUpdate} onClose={onCloseUpdate}>
                 <div>
                     <DetailCategory
-                        onCloseUpdate={onCloseUpdate}
+                        handleUpdate={handleUpdate}
                         category={category}
                     />
                 </div>
+            </Modal>
+            <Modal isVisible={modalDelete} onClose={onCloseDelete}>
+                <ModalDelete
+                    id={idDeleted}
+                    handleDelete={handleDelete}
+                    title={"Are you sure to delete this category?"}
+                    onCloseDelModal={onCloseDelete}
+                />
             </Modal>
             <div className="">
                 <button
@@ -125,7 +181,7 @@ const ListCategory = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {categorys.map((category: Category, index) => (
+                                {categories.map((category: Category, index) => (
                                     <tr
                                         className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
                                         key={index}
@@ -163,9 +219,12 @@ const ListCategory = () => {
                                                 </span>
                                                 <span
                                                     className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
-                                                    onClick={() =>
-                                                        onCloseDelete()
-                                                    }
+                                                    onClick={() => {
+                                                        setIdDeleted(
+                                                            category.id
+                                                        );
+                                                        onCloseDelete();
+                                                    }}
                                                 >
                                                     Delete
                                                 </span>

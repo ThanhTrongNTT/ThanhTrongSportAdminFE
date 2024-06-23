@@ -1,7 +1,7 @@
 import Field from "@/components/field/Field";
 import { Category } from "@/data/Interface";
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -14,13 +14,13 @@ const schame = Yup.object({
 });
 
 interface NewCategoryProps {
-    onCloseNew: () => void;
     category: Category;
     setCategory: (category: Category) => void;
+    handleCreateNew: (data: FieldValues) => void;
 }
 
 const NewCategory = ({
-    onCloseNew,
+    handleCreateNew,
     category,
     setCategory,
 }: NewCategoryProps) => {
@@ -58,16 +58,9 @@ const NewCategory = ({
         });
     }, [category, reset]);
 
-    const submit = (data: FieldValues) => {
-        console.log(data);
+    const submit = async (data: FieldValues) => {
+        await handleCreateNew(data);
         resetValues();
-        onCloseNew();
-        toast.success("Create Category success!", {
-            autoClose: 1000,
-            pauseOnHover: false,
-            draggable: true,
-            delay: 50,
-        });
     };
 
     // Show error nếu có lỗi xảy ra

@@ -1,7 +1,7 @@
 import Field from "@/components/field/Field";
 import { Category } from "@/data/Interface";
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -9,7 +9,7 @@ import * as Yup from "yup";
 type DetailCategoryProps = {
     // Props here
     category: Category;
-    onCloseUpdate: () => void;
+    handleUpdate: (data: FieldValues) => void;
 };
 
 const schame = Yup.object({
@@ -18,7 +18,7 @@ const schame = Yup.object({
         "Please enter your Category description!"
     ),
 });
-const DetailCategory = ({ category, onCloseUpdate }: DetailCategoryProps) => {
+const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
     const {
         handleSubmit,
         control,
@@ -32,14 +32,7 @@ const DetailCategory = ({ category, onCloseUpdate }: DetailCategoryProps) => {
     setValue("categoryDescription", category.description);
 
     const submit = (data: FieldValues) => {
-        console.log(data);
-        onCloseUpdate();
-        toast.success("Update Category success!", {
-            autoClose: 1000,
-            pauseOnHover: false,
-            draggable: true,
-            delay: 50,
-        });
+        handleUpdate(data);
     };
     useEffect(() => {
         const arrErrors = Object.values(errors);
