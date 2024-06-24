@@ -1,27 +1,24 @@
 import { Pagination } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import userApi from "@/api/user.api";
 import UserCard from "@/components/itemCard/userCard/UserCard";
 import { User } from "@/data/Interface";
 import Modal from "@/components/modal/Modal";
-import DetailUser from "../detail/DetailUser";
+import ModalDelete from "@/components/modal/ModalDelete";
 
 const List = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [users, setUsers] = useState<User | []>([]);
     const [totalPages, setTotalPages] = useState(1);
-    const [isEditModal, setIsEditModal] = useState(false);
     const [isDelModal, setIsDelModal] = useState(false);
-    const [idDelete, setIdDelete] = useState("");
-    const navigate = useNavigate();
+    const [users, setUsers] = useState<User[]>([]);
+    const [idDelete, setIdDelete] = useState<string>("");
 
     const getData = async (page: number) => {
-        // await userApi.getUsers(page - 1).then((users) => {
-        //     setResponse(users);
-        //     setUsers(users.data);
-        // });
+        await userApi.getUsers(page - 1, 5, "id", "asc").then((response) => {
+            setUsers(response.data.content);
+            setTotalPages(response.data.totalPages);
+        });
     };
     const onPageChange = (page: number) => {
         setCurrentPage(page);
@@ -29,10 +26,6 @@ const List = () => {
 
     const onCloseDelModal = () => {
         setIsDelModal(!isDelModal);
-    };
-
-    const onCloseEditModal = () => {
-        setIsEditModal(!isEditModal);
     };
 
     const handleDelete = async (id: string) => {
@@ -50,21 +43,30 @@ const List = () => {
         getData(currentPage);
     };
 
-    const handleEdit = async (id: string, user: User) => {
-        await userApi.update(id, user).then((response) => {
-            if (response.status === 200)
-                toast.success("Edit Success!", {
-                    autoClose: 500,
-                    delay: 50,
-                    draggable: true,
-                    pauseOnHover: false,
-                });
-        });
+    const handleActive = async (user: User) => {
+        if (user.activeFlag) {
+            await userApi.deactiveUser(user).then((response) => {
+                if (response.data)
+                    toast.success("Deactive User success!", {
+                        autoClose: 500,
+                        delay: 50,
+                        draggable: true,
+                        pauseOnHover: false,
+                    });
+            });
+        } else {
+            await userApi.activeUser(user).then((response) => {
+                if (response.data)
+                    toast.success("Active User success!", {
+                        autoClose: 500,
+                        delay: 50,
+                        draggable: true,
+                        pauseOnHover: false,
+                    });
+            });
+        }
+        getData(currentPage);
     };
-
-    useEffect(() => {
-        getData(1);
-    }, []);
     useEffect(() => {
         getData(currentPage);
     }, [currentPage]);
@@ -72,73 +74,27 @@ const List = () => {
     return (
         <>
             <Modal isVisible={isDelModal} onClose={onCloseDelModal}>
-                <div className="text-center p-10">
-                    <h3 className="mb-5 text-lg font-bold text-gray-500 dark:text-gray-400">
-                        Are you sure you want to delete this user?
-                    </h3>
-                    <div className="flex justify-center gap-4">
-                        <button
-                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-                            color="failure"
-                            // onClick={() => handleDelete(idDelete)}
-                            onClick={() => onCloseDelModal()}
-                        >
-                            Yes, I'm sure
-                        </button>
-                        <button
-                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full"
-                            color="gray"
-                            onClick={onCloseDelModal}
-                        >
-                            No, cancel
-                        </button>
-                    </div>
-                </div>
+                <ModalDelete
+                    id={idDelete}
+                    handleDelete={handleDelete}
+                    title="Are you sure you want to delete this user?"
+                    onCloseDelModal={onCloseDelModal}
+                />
             </Modal>
-            <Modal isVisible={isEditModal} onClose={onCloseEditModal}>
-                <div className="p-10">
-                    <DetailUser
-                        isEditModal={isEditModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
-                </div>
-            </Modal>
-            <div className="p-2">
+            <div className="">
                 <div className="flex flex-wrap">
-                    <UserCard
-                        onCloseDel={onCloseDelModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
-                    <UserCard
-                        onCloseDel={onCloseDelModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
-                    <UserCard
-                        onCloseDel={onCloseDelModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
-                    <UserCard
-                        onCloseDel={onCloseDelModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
-                    <UserCard
-                        onCloseDel={onCloseDelModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
-                    <UserCard
-                        onCloseDel={onCloseDelModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
-                    <UserCard
-                        onCloseDel={onCloseDelModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
-                    <UserCard
-                        onCloseDel={onCloseDelModal}
-                        onCloseEdit={onCloseEditModal}
-                    />
+                    {users.map((user) => (
+                        <UserCard
+                            key={user.id}
+                            user={user}
+                            id={user.id}
+                            setIdDelete={setIdDelete}
+                            onCloseDel={onCloseDelModal}
+                            handleActive={handleActive}
+                        />
+                    ))}
                 </div>
-                <div className="flex items-center justify-center text-center">
+                <div className="flex justify-center">
                     <Pagination
                         showIcons={true}
                         currentPage={currentPage}
