@@ -1,57 +1,123 @@
 import { IconAdd } from "@/components/icon/Icon";
 import Modal from "@/components/modal/Modal";
 import { Size } from "@/data/Interface";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import NewSize from "../new/NewSize";
+import DetailSize from "../detail/DetailSize";
+import ModalDelete from "@/components/modal/ModalDelete";
+import SizeAPI from "@/api/size.api";
+import { Pagination } from "flowbite-react";
+import { toast } from "react-toastify";
+import { FieldValues } from "react-hook-form";
 
 const ListSize = () => {
-    const sizes: Size[] = [
-        {
-            id: "1",
-            name: "S",
-            value: "S",
-            description: "Size S",
-        },
-        {
-            id: "1",
-            name: "M",
-            value: "M",
-            description: "Size S",
-        },
-        {
-            id: "1",
-            name: "L",
-            value: "L",
-            description: "Size S",
-        },
-        {
-            id: "1",
-            name: "XL",
-            value: "XL",
-            description: "Size S",
-        },
-        {
-            id: "1",
-            name: "XXL",
-            value: "XXL",
-            description: "Size S",
-        },
-    ];
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(10);
     const [modalNew, setModalNew] = useState(false);
     const [modalUpdate, setModalUpdate] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
+    const [sizes, setSizes] = useState<Size[]>([]);
+    const [selectedSize, setSelectedSize] = useState<Size>({
+        name: "",
+        value: "",
+        description: "",
+        id: "",
+        removalFlag: false,
+    });
+    const [idDelete, setIdDelete] = useState<string>("");
+    const [sizeNew, setSizeNew] = useState<Size>({
+        name: "",
+        value: "",
+        description: "",
+        id: "",
+        removalFlag: false,
+    });
+
+    const getData = async (page: number) => {
+        // Get data here
+        await SizeAPI.getAllSizes(page - 1, 5, "createdDate", "asc").then(
+            (res) => {
+                setSizes(res.data.content);
+                setTotalPage(res.data.totalPages);
+            }
+        );
+    };
 
     const onCloseNew = () => {
         setModalNew(!modalNew);
+    };
+
+    const handleCreateNew = async (data: FieldValues) => {
+        const sizeNew = {
+            name: data.sizeName,
+            value: data.sizeValue,
+            description: data.sizeDescription,
+        };
+        await SizeAPI.createSize(sizeNew).then((response) => {
+            if (response.data) {
+                onCloseNew();
+                toast.success("Create Success!", {
+                    autoClose: 500,
+                    delay: 50,
+                    draggable: true,
+                    pauseOnHover: false,
+                });
+                getData(currentPage);
+            }
+        });
     };
 
     const onCloseUpdate = () => {
         setModalUpdate(!modalUpdate);
     };
 
+    const handleUpdate = async (data: FieldValues) => {
+        const sizeUpdate = {
+            ...selectedSize,
+            name: data.sizeName,
+            value: data.sizeValue,
+            description: data.sizeDescription,
+        };
+        setModalUpdate(!modalUpdate);
+        await SizeAPI.updateSize(sizeUpdate).then((response) => {
+            if (response.data) {
+                toast.success("Update Success!", {
+                    autoClose: 500,
+                    delay: 50,
+                    draggable: true,
+                    pauseOnHover: false,
+                });
+                getData(currentPage);
+            }
+        });
+    };
+
     const onCloseDelete = () => {
         setModalDelete(!modalDelete);
     };
+
+    const handleDelete = async (id: string) => {
+        setModalDelete(!modalDelete);
+        await SizeAPI.deleteSize(id).then((response) => {
+            if (response.data) {
+                toast.success("Delete Success!", {
+                    autoClose: 500,
+                    delay: 50,
+                    draggable: true,
+                    pauseOnHover: false,
+                });
+                getData(currentPage);
+            }
+        });
+    };
+
+    const onPageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+    useEffect(() => {
+        getData(currentPage);
+    }, [currentPage]);
+
     return (
         <>
             <div className="">
@@ -64,13 +130,29 @@ const ListSize = () => {
                 </button>
             </div>
             <Modal isVisible={modalNew} onClose={onCloseNew}>
-                <div>New Size</div>
+                <div>
+                    <NewSize
+                        size={sizeNew}
+                        setSize={setSizeNew}
+                        handleCreateNew={handleCreateNew}
+                    />
+                </div>
             </Modal>
             <Modal isVisible={modalUpdate} onClose={onCloseUpdate}>
-                <div>Update Size</div>
+                <div>
+                    <DetailSize
+                        size={selectedSize}
+                        handleUpdate={handleUpdate}
+                    />
+                </div>
             </Modal>
             <Modal isVisible={modalDelete} onClose={onCloseDelete}>
-                <div>Delete Size</div>
+                <ModalDelete
+                    id={idDelete}
+                    handleDelete={handleDelete}
+                    title={"Are you sure to delete this size?"}
+                    onCloseDelModal={onCloseDelete}
+                />
             </Modal>
             <div className="p-5">
                 <div className="overflow-x-auto rounded-2xl border mx-4 border-gray-c4 ">
@@ -131,13 +213,19 @@ const ListSize = () => {
                                         <div className="text-center">
                                             <span
                                                 className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
-                                                onClick={() => onCloseUpdate()}
+                                                onClick={() => {
+                                                    setSelectedSize(size);
+                                                    onCloseUpdate();
+                                                }}
                                             >
                                                 Update
                                             </span>
                                             <span
                                                 className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
-                                                onClick={() => onCloseDelete()}
+                                                onClick={() => {
+                                                    setIdDelete(size.id ?? "");
+                                                    onCloseDelete();
+                                                }}
                                             >
                                                 Delete
                                             </span>
@@ -147,6 +235,15 @@ const ListSize = () => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+                <div className="flex justify-center">
+                    <Pagination
+                        showIcons={true}
+                        currentPage={currentPage}
+                        totalPages={totalPage}
+                        onPageChange={onPageChange}
+                        layout="pagination"
+                    />
                 </div>
             </div>
         </>

@@ -37,7 +37,7 @@ export interface Product {
 }
 
 export interface Size {
-    id: string;
+    id?: string;
     name: string;
     value: string;
     description: string;
@@ -45,20 +45,20 @@ export interface Size {
 }
 
 export interface Category {
-    id: string;
+    id?: string;
     categoryName: string;
     description: string;
     removalFlag: boolean;
 }
 
 export interface CartDetail {
-    id: string;
+    id?: string;
     product: Product;
     quantity: number;
     removalFlag: boolean;
 }
 export interface Cart {
-    id: string;
+    id?: string;
     user: User;
     total: number;
     cartDetails: CartDetail[];

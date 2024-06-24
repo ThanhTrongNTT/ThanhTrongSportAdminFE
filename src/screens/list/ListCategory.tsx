@@ -32,12 +32,15 @@ const ListCategory = () => {
     });
 
     const getData = async (page: number) => {
-        await CategoryAPI.getAllCategory(page - 1, 5, "id", "asc").then(
-            (response) => {
-                setTotalPage(response.data.totalPages);
-                setCategories(response.data.content);
-            }
-        );
+        await CategoryAPI.getAllCategory(
+            page - 1,
+            5,
+            "createdDate",
+            "asc"
+        ).then((response) => {
+            setTotalPage(response.data.totalPages);
+            setCategories(response.data.content);
+        });
     };
 
     const onCloseNew = () => {
@@ -48,7 +51,6 @@ const ListCategory = () => {
         const categoryNew: Category = {
             categoryName: data.categoryName,
             description: data.categoryDescription,
-            id: "",
             removalFlag: false,
         };
         CategoryAPI.addCategory(categoryNew).then((response) => {
@@ -79,20 +81,22 @@ const ListCategory = () => {
             categoryName: data.categoryName,
             description: data.categoryDescription,
         };
-        CategoryAPI.updateCategory(categoryUpdate, category.id).then(
-            (response) => {
-                if (response.data) {
-                    onCloseUpdate();
-                    toast.success("Update Category success!", {
-                        autoClose: 1000,
-                        pauseOnHover: false,
-                        draggable: true,
-                        delay: 50,
-                    });
-                    getData(currentPage);
+        if (categoryUpdate.id) {
+            CategoryAPI.updateCategory(categoryUpdate, categoryUpdate.id).then(
+                (response) => {
+                    if (response.data) {
+                        onCloseUpdate();
+                        toast.success("Update Category success!", {
+                            autoClose: 1000,
+                            pauseOnHover: false,
+                            draggable: true,
+                            delay: 50,
+                        });
+                        getData(currentPage);
+                    }
                 }
-            }
-        );
+            );
+        }
     };
 
     const onCloseDelete = () => {
@@ -221,7 +225,7 @@ const ListCategory = () => {
                                                     className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
                                                     onClick={() => {
                                                         setIdDeleted(
-                                                            category.id
+                                                            category.id ?? ""
                                                         );
                                                         onCloseDelete();
                                                     }}
