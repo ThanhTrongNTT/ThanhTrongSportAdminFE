@@ -8,9 +8,7 @@ import * as Yup from "yup";
 
 const schame = Yup.object({
     categoryName: Yup.string().required("Please enter your Category name!"),
-    categoryDescription: Yup.string().required(
-        "Please enter your Category description!"
-    ),
+    locale: Yup.string().required("Please enter your Locale!"),
 });
 
 interface NewCategoryProps {
@@ -34,27 +32,29 @@ const NewCategory = ({
         mode: "onSubmit",
         defaultValues: {
             categoryName: category.categoryName,
-            categoryDescription: category.description,
+            locale: category.locale,
         },
     });
 
     const resetValues = () => {
         reset({
             categoryName: "",
-            categoryDescription: "",
+            locale: "",
         });
         setCategory({
             categoryName: "",
-            description: "",
+            locale: "",
+            level: 1,
+            parentCategory: null,
             id: "",
-            removalFlag: false,
+            // removalFlag: false,
         });
     };
 
     useEffect(() => {
         reset({
             categoryName: category.categoryName,
-            categoryDescription: category.description,
+            locale: category.locale,
         });
     }, [category, reset]);
 
@@ -84,39 +84,61 @@ const NewCategory = ({
             <div className="bg-white mt-10 rounded-md px-10 pt-10 pb-5">
                 {/* <form onSubmit={handleSubmit(onSubmit)}> */}
                 <form onSubmit={handleSubmit(submit)}>
-                    <h1 className="font-bold text-lg">Category Infomation</h1>
+                    <h1 className="font-bold text-2xl text-center">
+                        Create Category
+                    </h1>
                     <div className="text-right mt-10">
                         <div className="grid grid-cols-2 gap-10">
-                            <Field
-                                control={control}
-                                name="categoryName"
-                                id="category-name"
-                                placeholder="Enter Category name..."
-                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                    setCategory({
-                                        ...category,
-                                        categoryName: e.target.value,
-                                    })
-                                }
-                            >
-                                Category Name
-                            </Field>
-                            <Field
-                                control={control}
-                                name="categoryDescription"
-                                id="category-description"
-                                placeholder="Enter Description..."
-                                onChange={(
-                                    e: ChangeEvent<HTMLInputElement>
-                                ) => {
-                                    setCategory({
-                                        ...category,
-                                        description: e.target.value,
-                                    });
-                                }}
-                            >
-                                Description
-                            </Field>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Category Name
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="categoryName"
+                                    id="category-name"
+                                    placeholder="Enter Category name..."
+                                    error={errors.categoryName?.message ?? ""}
+                                    onChange={(
+                                        e: ChangeEvent<HTMLInputElement>
+                                    ) =>
+                                        setCategory({
+                                            ...category,
+                                            categoryName: e.target.value,
+                                        })
+                                    }
+                                >
+                                    Category Name
+                                </Field>
+                            </div>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Category Locale
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="locale"
+                                    id="category-locale"
+                                    placeholder="Enter Locale..."
+                                    error={errors.locale?.message ?? ""}
+                                    onChange={(
+                                        e: ChangeEvent<HTMLInputElement>
+                                    ) => {
+                                        setCategory({
+                                            ...category,
+                                            locale: e.target.value,
+                                        });
+                                    }}
+                                >
+                                    Locale
+                                </Field>
+                            </div>
                         </div>
                         <button
                             type="submit"

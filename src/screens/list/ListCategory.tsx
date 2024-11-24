@@ -12,7 +12,7 @@ import { FieldValues } from "react-hook-form";
 
 const ListCategory = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPage, setTotalPage] = useState(10);
+    const [totalPage, setTotalPage] = useState(1);
     const [isNewModal, setIsNewModal] = useState(false);
     const [modalUpdate, setModalUpdate] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
@@ -20,26 +20,29 @@ const ListCategory = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [categoryNew, setCategoryNew] = useState<Category>({
         categoryName: "",
-        description: "",
-        id: "",
-        removalFlag: false,
+        level: 0,
+        locale: "",
+        parentCategory: null,
+        // removalFlag: false,
     });
     const [category, setCategory] = useState<Category>({
         categoryName: "",
-        description: "",
-        id: "",
-        removalFlag: false,
+        level: 0,
+        locale: "",
+        parentCategory: null,
+        // removalFlag: false,
     });
 
     const getData = async (page: number) => {
-        await CategoryAPI.getAllCategory(
+        await CategoryAPI.getAllFromLevel(
+            1,
             page - 1,
             5,
-            "createdDate",
-            "asc"
+            "modifiedDate",
+            ""
         ).then((response) => {
             setTotalPage(response.data.totalPages);
-            setCategories(response.data.content);
+            setCategories(response.data.items);
         });
     };
 
@@ -50,8 +53,10 @@ const ListCategory = () => {
     const handleCreateNew = (data: FieldValues) => {
         const categoryNew: Category = {
             categoryName: data.categoryName,
-            description: data.categoryDescription,
-            removalFlag: false,
+            locale: data.locale,
+            level: 1,
+            parentCategory: null,
+            // removalFlag: false,
         };
         CategoryAPI.addCategory(categoryNew).then((response) => {
             if (response.data) {
@@ -79,7 +84,7 @@ const ListCategory = () => {
         const categoryUpdate: Category = {
             ...category,
             categoryName: data.categoryName,
-            description: data.categoryDescription,
+            locale: data.locale,
         };
         if (categoryUpdate.id) {
             CategoryAPI.updateCategory(categoryUpdate, categoryUpdate.id).then(
@@ -106,9 +111,9 @@ const ListCategory = () => {
     const handleDelete = async (id: string) => {
         setModalDelete(!modalDelete);
         await CategoryAPI.deleteCategory(id).then((response) => {
-            if (response.data) {
+            if (response && response.result) {
                 toast.success("Delete Success!", {
-                    autoClose: 500,
+                    autoClose: 5000,
                     delay: 50,
                     draggable: true,
                     pauseOnHover: false,
@@ -161,94 +166,89 @@ const ListCategory = () => {
                     <span className="flex items-center mr-2">Add New</span>
                 </button>
             </div>
-            <div className="">
-                <div className="p-5">
-                    <div className="overflow-x-auto rounded-2xl border mx-4 border-gray-c4 ">
-                        <table className="bg-white w-full text-sm text-left text-gray-400">
-                            <thead>
-                                <tr>
-                                    <th scope="col" className="py-3 px-6">
-                                        Category Id
-                                    </th>
-                                    <th scope="col" className="px-6">
-                                        Category Name
-                                    </th>
-                                    <th scope="col" className="px-6">
-                                        Category Description
+            <div className="p-5">
+                <div className="overflow-x-auto rounded-2xl border mx-4 border-gray-c4 ">
+                    <table className="bg-white w-full text-sm text-left text-gray-400">
+                        <thead>
+                            <tr>
+                                <th scope="col" className="py-3 px-6">
+                                    Category Id
+                                </th>
+                                <th scope="col" className="px-6">
+                                    Category Name
+                                </th>
+                                <th scope="col" className="px-6">
+                                    Category Locale
+                                </th>
+                                <th scope="col" className="px-6 text-center">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {categories.map((category: Category, index) => (
+                                <tr
+                                    className="bg-white border border-gray-c2 hover:bg-gray-c2"
+                                    key={index}
+                                >
+                                    <th
+                                        scope="row"
+                                        className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                    >
+                                        {category.id}
                                     </th>
                                     <th
-                                        scope="col"
-                                        className="px-6 text-center"
+                                        scope="row"
+                                        className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                     >
-                                        Action
+                                        {category.categoryName}
+                                    </th>
+                                    <th
+                                        scope="row"
+                                        className="py-4 px-6 font-medium whitespace-nowrap"
+                                    >
+                                        {category.locale}
+                                    </th>
+                                    <th
+                                        scope="row"
+                                        className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                    >
+                                        <div className="text-center">
+                                            <span
+                                                className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
+                                                onClick={() =>
+                                                    onClickUpdate(category)
+                                                }
+                                            >
+                                                Update
+                                            </span>
+                                            <span
+                                                className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
+                                                onClick={() => {
+                                                    setIdDeleted(
+                                                        category.id ?? ""
+                                                    );
+                                                    onCloseDelete();
+                                                }}
+                                            >
+                                                Delete
+                                            </span>
+                                        </div>
                                     </th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {categories.map((category: Category, index) => (
-                                    <tr
-                                        className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
-                                        key={index}
-                                    >
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
-                                        >
-                                            {category.id}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
-                                        >
-                                            {category.categoryName}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium whitespace-nowrap"
-                                        >
-                                            {category.description}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
-                                        >
-                                            <div className="text-center">
-                                                <span
-                                                    className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
-                                                    onClick={() =>
-                                                        onClickUpdate(category)
-                                                    }
-                                                >
-                                                    Update
-                                                </span>
-                                                <span
-                                                    className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
-                                                    onClick={() => {
-                                                        setIdDeleted(
-                                                            category.id ?? ""
-                                                        );
-                                                        onCloseDelete();
-                                                    }}
-                                                >
-                                                    Delete
-                                                </span>
-                                            </div>
-                                        </th>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-                <div className="flex justify-center">
-                    <Pagination
-                        showIcons={true}
-                        currentPage={currentPage}
-                        totalPages={totalPage}
-                        onPageChange={onPageChange}
-                        layout="pagination"
-                    />
-                </div>
+            </div>
+            <div className="flex justify-center">
+                <Pagination
+                    showIcons={true}
+                    currentPage={currentPage}
+                    totalPages={totalPage}
+                    onPageChange={onPageChange}
+                    layout="pagination"
+                />
             </div>
         </>
     );

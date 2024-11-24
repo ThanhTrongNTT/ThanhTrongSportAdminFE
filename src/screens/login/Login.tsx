@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -37,19 +37,9 @@ type LoginType = {
 function Login() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    // const handlerChangeEmail = (e: any) => {
-    //     setEmail(e.target.value);
-    // };
-    // const handlerChangePassword = (e: any) => {
-    //     setPassword(e.target.value);
-    // };
     const loginHandler = async (values: LoginType) => {
         const { email, password } = values;
         navigate("/admin");
-        sessionStorage.setItem("admin", "true");
-
-        // Thực thiện chức năng Login
-
         await AuthAPI.login(email, password)
             .then(async (res) => {
                 const decode: JWTType = jwtDecode(res.data.accessToken);
@@ -77,6 +67,7 @@ function Login() {
                                 delay: 10,
                                 draggable: true,
                                 pauseOnHover: false,
+                                position: "bottom-right",
                             });
                         })
                         .catch((err) => {
@@ -85,6 +76,7 @@ function Login() {
                                 delay: 10,
                                 draggable: true,
                                 pauseOnHover: false,
+                                position: "bottom-right",
                             });
                         });
                 } else {
@@ -93,6 +85,7 @@ function Login() {
                         delay: 10,
                         draggable: true,
                         pauseOnHover: false,
+                        position: "bottom-right",
                     });
                 }
             })
@@ -103,6 +96,7 @@ function Login() {
                         delay: 10,
                         draggable: true,
                         pauseOnHover: false,
+                        position: "bottom-right",
                     });
                 }
             });
@@ -119,7 +113,6 @@ function Login() {
         resolver: yupResolver(schame),
         mode: "onSubmit",
     });
-    // Show error nếu có lỗi xảy ra
     useEffect(() => {
         const arrErrors = Object.values(errors);
         if (arrErrors.length > 0) {

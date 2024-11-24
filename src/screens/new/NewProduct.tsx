@@ -1,204 +1,441 @@
 // import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import React, { useEffect, useState, ChangeEvent } from "react";
-import { FieldValues, useForm } from "react-hook-form";
-import Dropdown from "@/components/dropdown/Dropdown";
+import CategoryAPI from "@/api/category.api";
+import MediaFileAPI from "@/api/mediaFile.api";
+import DropdownCategory from "@/components/dropdown/DropdownCategory";
 import Field from "@/components/field/Field";
-import Label from "@/components/label/Label";
+import { Image } from "@/data/Image.interface";
+import { Category, initProduct, Product } from "@/data/Product.interface";
 import classNames from "@/utils/classNames";
+import { ProductSchema } from "@/utils/schema.resolver";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Controller, FieldValues, set, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
-const NewProduct = () => {
-    const { handleSubmit, control, setValue } = useForm();
-    const [images, setImages] = useState<Array<string | File>>([]);
-    // const [percent, setPercent] = useState(0);
-    // const [urls, setUrls] = useState<Array<string>>([]);
+interface NewProductProps {
+    handleCreateNew: (product: Product) => void;
+    genders: Category[];
+}
+
+const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
+    const [categories, setCategories] = useState<Category[]>([]);
+    const {
+        handleSubmit,
+        control,
+        reset,
+        setValue,
+        formState: { errors },
+        watch,
+    } = useForm<Product>({
+        resolver: yupResolver(ProductSchema),
+        mode: "onSubmit",
+        defaultValues: initProduct,
+    });
+
+    const [images, setImages] = useState<Array<File>>([]);
     const [disable, setDisable] = useState<boolean>(true);
+    const [mediaFiles, setMediaFiles] = useState<Image[]>([]);
+
+    const formValues = watch();
+
+    const disableAdd = () => {
+        return (
+            formValues.productName === "" &&
+            formValues.longDescription === "" &&
+            formValues.freeInformation === "" &&
+            formValues.washingInformation === "" &&
+            formValues.slug === "" &&
+            formValues.basePrice === 0 &&
+            formValues.gender === null &&
+            formValues.category === null
+        );
+    };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             for (let i = 0; i < e.target.files.length; i++) {
                 const newImage = e.target.files[i];
                 setImages((images) => [...images, newImage]);
+                const file = {
+                    id: "",
+                    fileName: newImage.name,
+                    fileType: newImage.type,
+                    url: "",
+                };
+                setMediaFiles((mediaFiles) => [...mediaFiles, file]);
             }
         }
     };
 
     const onSubmit = (data: FieldValues) => {
-        console.log(data);
-    };
-    // const uploadFireBase = () => {
-    //     const promises: Array<any> = [];
-    //     // eslint-disable-next-line array-callback-return
-    //     images.map((image: any) => {
-    //         const imageRef = ref(storage, `images/${image.name}`);
-    //         const uploadTask = uploadBytesResumable(imageRef, image);
-    //         promises.push(uploadTask);
-    //         uploadTask.on(
-    //             'state_changed',
-    //             (snaphot: any) => {
-    //                 const percent = 0;
-    //                 setPercent(percent);
-    //             },
-    //             (err: any) => console.log(err),
-    //             () => {
-    //                 getDownloadURL(uploadTask.snapshot.ref).then((url: string) => {
-    //                     setUrls((prev) => [...prev, url]);
-    //                 });
-    //             },
-    //         );
-    //     });
-    //     Promise.all(promises)
-    //         .then(() => {
-    //             toast.success('Upload success', {
-    //                 autoClose: 500,
-    //             });
-    //         })
-    //         .catch((err) => console.log(err));
-    // };
-    // const onSubmit = ({ beginningLocation, destinationLocation, type, ...values }: any) => {
-    //     // const tour = {
-    //     //     tourDetail: {
-    //     //         ...values,
-    //     //         beginningLocation: {
-    //     //             locationName: beginningLocation,
-    //     //             locationType: 'BEGINNING',
-    //     //         },
-    //     //         destinationLocation: {
-    //     //             locationName: destinationLocation,
-    //     //             locationType: 'DESTINATION',
-    //     //         },
-    //     //         images: urls,
-    //     //     },
-    //     //     type,
-    //     // };
-    //     // console.log('TCL: NewTour -> tour', tour);
-    //     // tourApi
-    //     //     .saveTour(tour)
-    //     //     .then((response) => {
-    //     //         console.log(response);
-    //     //     })
-    //     //     .catch((errr) => console.log(errr));
-    // };
-    useEffect(() => {
-        // const getData = async () => {
-        //     await locationApi.getLocationByType('BEGINNING').then((reponse) => {
-        //         reponse.data.map((item: Location) => {
-        //             setBeginning((prev: any) => [...prev, item.locationName]);
-        //         });
-        //     });
-        //     await locationApi.getLocationByType('DESTINATION').then((reponse) => {
-        //         reponse.data.map((item: Location) => {
-        //             setDestination((prev: any) => [...prev, item.locationName]);
-        //         });
-        //     });
+        console.log("data", data);
+        setDisable(false);
+        // const product: Product = {
+        //     productName: data.productName,
+        //     freeInformation: data.freeInformation,
+        //     longDescription: data.washingInformation,
+        //     washingInformation: data.washingInformation,
+        //     slug: data.slug,
+        //     price: data.price,
+        //     gender: data.gender,
+        //     category: data.category,
+        //     subImages: mediaFiles,
         // };
-        // getData();
-    }, []);
+        // handleCreateNew(product);
+        // resetValues();
+        setTimeout(() => {
+            setDisable(true);
+            handleCreateNew(data);
+        }, 5000);
+    };
+    const uploadFiles = async () => {
+        setDisable(false);
+        // if (images.length === 0) {
+        //     toast.error("Please choose your images", {
+        //         autoClose: 1000,
+        //         pauseOnHover: false,
+        //         draggable: true,
+        //         delay: 50,
+        //     });
+        //     setDisable(true);
+        //     return;
+        // }
+        // await MediaFileAPI.uploadFiles(images).then((response) => {
+        //     if (response.data) {
+        //         setImages([]);
+        //         toast.success("Upload success", {
+        //             autoClose: 1000,
+        //             pauseOnHover: false,
+        //             draggable: true,
+        //             delay: 50,
+        //         });
+        //         setDisable(true);
+        //         setMediaFiles(response.data);
+        //     }
+        //     setDisable(true);
+        // });
+        setTimeout(() => {
+            setDisable(true);
+            setImages([]);
+        }, 5000);
+    };
 
+    const resetValues = () => {
+        reset(initProduct);
+    };
+
+    useEffect(() => {
+        setValue("subImages", mediaFiles);
+    }, [mediaFiles, setValue]);
+
+    useEffect(() => {
+        if (errors.gender) {
+            toast.error(errors.gender.message, {
+                autoClose: 1000,
+                pauseOnHover: false,
+                draggable: true,
+                delay: 50,
+            });
+        } else if (errors.productName) {
+            toast.error(errors.productName.message, {
+                autoClose: 1000,
+                pauseOnHover: false,
+                draggable: true,
+                delay: 50,
+            });
+        } else {
+            const arrErrors = Object.values(errors);
+            if (arrErrors.length > 0) {
+                if (arrErrors[0]?.message) {
+                    const message = arrErrors[0]?.message;
+                    toast.error(message.toString(), {
+                        autoClose: 1000,
+                        pauseOnHover: false,
+                        draggable: true,
+                        delay: 50,
+                    });
+                }
+            }
+        }
+    }, [errors]);
+    const gender = watch("gender");
+    useEffect(() => {
+        if (gender && gender.id !== "") {
+            if (gender.id) {
+                CategoryAPI.getChildCategory(gender.id).then((response) => {
+                    if (response.data) {
+                        setCategories(response.data);
+                    }
+                });
+            }
+        }
+    }, [gender]);
     return (
-        <div className="w-[800px]">
+        <div className="w-[1000px]">
             <div className="bg-white mt-10 rounded-md px-10 pt-10 pb-5">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <h1 className="font-bold text-lg">Product Infomation</h1>
+                    <h1 className="font-bold text-lg flex justify-center">
+                        Product Infomation
+                    </h1>
                     <div className="text-right mt-10">
                         <div className="grid grid-cols-2 gap-10">
-                            <Field
-                                control={control}
-                                name="productName"
-                                id="product-name"
-                                placeholder="Enter product name..."
-                            >
-                                Product Name
-                            </Field>
-                            <Field
-                                control={control}
-                                name="productDes"
-                                id="product-des"
-                                placeholder="Enter destination..."
-                            >
-                                Product Description
-                            </Field>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Product Name
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="productName"
+                                    id="product-name"
+                                    placeholder="Enter product name..."
+                                    error={errors.productName?.message ?? ""}
+                                />
+                            </div>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Product Long Description
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="longDescription"
+                                    id="long-description"
+                                    placeholder="Enter Long Description..."
+                                    error={
+                                        errors.longDescription?.message ?? ""
+                                    }
+                                />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-10">
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Product Free Information
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="freeInformation"
+                                    id="product-name"
+                                    placeholder="Enter Free Information..."
+                                    error={
+                                        errors.freeInformation?.message ?? ""
+                                    }
+                                />
+                            </div>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Product Slug
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="slug"
+                                    id="product-slug"
+                                    placeholder="Enter Slug..."
+                                    error={errors.slug?.message ?? ""}
+                                    // onChange={(
+                                    //     e: ChangeEvent<HTMLInputElement>
+                                    // ) =>
+                                    //     setProduct({
+                                    //         ...product,
+                                    //         slug: e.target.value,
+                                    //     })
+                                    // }
+                                >
+                                    Product Slug
+                                </Field>
+                            </div>
                         </div>
                         <div className="grid grid-cols-2 gap-10 mt-10">
-                            <Field
-                                control={control}
-                                name="price"
-                                id="price"
-                                placeholder="Enter price..."
-                            >
-                                Price
-                            </Field>
-                            <Field
-                                control={control}
-                                name="quantity"
-                                id="quantity"
-                                placeholder="Enter quantity..."
-                            >
-                                Quantity
-                            </Field>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Product Price
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="basePrice"
+                                    id="basePrice"
+                                    placeholder="Enter price..."
+                                    type="number"
+                                    error={errors.basePrice?.message ?? ""}
+                                    // onChange={(
+                                    //     e: ChangeEvent<HTMLInputElement>
+                                    // ) => {
+                                    //     setProduct({
+                                    //         ...product,
+                                    //         basePrice: parseInt(e.target.value),
+                                    //     });
+                                    // }}
+                                >
+                                    Price
+                                </Field>
+                            </div>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Product Washing Information
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="washingInformation"
+                                    id="quantity"
+                                    placeholder="Enter Washing Information..."
+                                    error={
+                                        errors.washingInformation?.message ?? ""
+                                    }
+                                    // onChange={(
+                                    //     e: ChangeEvent<HTMLInputElement>
+                                    // ) =>
+                                    //     setProduct({
+                                    //         ...product,
+                                    //         washingInformation: e.target.value,
+                                    //     })
+                                    // }
+                                >
+                                    Product Washing Information
+                                </Field>
+                            </div>
                         </div>
                         <div className="grid grid-cols-2 gap-10 mt-10">
                             <div className="flex flex-col gap-2 text-left">
-                                <Label htmlFor="" className="">
-                                    Size
-                                </Label>
-                                <Dropdown
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Product Gender
+                                </label>
+                                {/* <Dropdown
                                     className=""
                                     control={control}
                                     setValue={setValue}
                                     dropdownLabel="Select Size"
                                     name="size"
-                                    list={["S", "M", "L", "XL", "XXL"]}
+                                    list={getSizeNames()}
+                                /> */}
+                                <Controller
+                                    name="gender"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <DropdownCategory
+                                            field={field}
+                                            dropdownLabel={"Select Gender"}
+                                            list={genders}
+                                            error={errors.gender?.message ?? ""}
+                                        />
+                                    )}
                                 />
                             </div>
                             <div className="flex flex-col gap-2 text-left">
-                                <Label htmlFor="" className="">
-                                    Category
-                                </Label>
-                                <Dropdown
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Product Category
+                                </label>
+                                {/* <Dropdown
                                     className=""
                                     control={control}
                                     setValue={setValue}
                                     dropdownLabel="Select category"
                                     name="category"
-                                    list={[
-                                        "category1",
-                                        "category2",
-                                        "category3",
-                                    ]}
+                                    list={getCategoryNames()}
+                                /> */}
+                                <Controller
+                                    name="category"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <DropdownCategory
+                                            field={field}
+                                            dropdownLabel={"Select category"}
+                                            list={categories}
+                                            error={
+                                                errors.category?.message ?? ""
+                                            }
+                                        />
+                                    )}
                                 />
                             </div>
                         </div>
-                        <div className="mt-10 text-left flex items-center">
-                            <input
-                                type="file"
-                                multiple
-                                onChange={handleChange}
-                                className="w-2/4 px-4 py-2 rounded-lg border border-c6"
-                            />
-                            <button
-                                type="button"
-                                // onClick={uploadFireBase}
-                                className={classNames(
-                                    "ml-4 h-12 w-[130px] rounded-md text-white font-semibold",
-                                    disable
-                                        ? "bg-gradient-to-br from-orange-500 to-pink-500"
-                                        : "bg-gradient-to-br from-orange-200 to-pink-200 cursor-no-drop"
-                                )}
+                        <div className="mt-10 text-left items-center">
+                            <label
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                htmlFor="file_input"
                             >
-                                {disable ? (
-                                    "Upload"
-                                ) : (
-                                    <div className="flex items-center justify-center">
-                                        <div className="w-7 h-7 bg-transparent border-[3px] border-t-[3px] border-t-transparent animate-spin border-white rounded-full"></div>
-                                    </div>
-                                )}
-                            </button>
+                                Upload file
+                            </label>
+                            <div className="flex">
+                                <input
+                                    type="file"
+                                    multiple
+                                    onChange={handleChange}
+                                    className="w-full text-gray-500 font-medium text-sm bg-gray-100 file:cursor-pointer cursor-pointer file:h-full file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded"
+                                />
+                                {/* <button
+                                    type="button"
+                                    onClick={uploadFiles}
+                                    className={classNames(
+                                        "ml-4 h-12 w-[130px] rounded-md text-white font-semibold",
+                                        images.length === 0
+                                            ? "cursor-no-drop bg-gradient-to-br from-orange-200 to-pink-200"
+                                            : disable
+                                              ? "bg-gradient-to-br from-orange-500 to-pink-500"
+                                              : "cursor-wait bg-gradient-to-br from-orange-500 to-pink-500"
+                                    )}
+                                    disabled={images.length === 0}
+                                >
+                                    
+                                </button> */}
+                            </div>
                         </div>
                         <button
                             type="submit"
-                            className="mt-10 font-semibold text-white bg-gradient-to-br from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 px-4 py-2 rounded-md inline-block transition-all"
+                            className={
+                                (classNames(
+                                    "ml-4 h-12 w-[130px] rounded-md text-white font-semibold"
+                                ),
+                                images.length === 0
+                                    ? "cursor-no-drop bg-gradient-to-br from-orange-200 to-pink-200"
+                                    : disable
+                                      ? "bg-gradient-to-br from-orange-500 to-pink-500"
+                                      : "cursor-wait bg-gradient-to-br from-orange-500 to-pink-500")
+                            }
+                        ></button>
+                        <button
+                            type="submit"
+                            className={classNames(
+                                "mt-4 ml-4 h-12 w-[130px] rounded-md text-white font-semibold",
+                                disableAdd()
+                                    ? "cursor-no-drop bg-gradient-to-br from-orange-200 to-pink-200"
+                                    : disable
+                                      ? "bg-gradient-to-br from-orange-500 to-pink-500"
+                                      : "cursor-wait bg-gradient-to-br from-orange-500 to-pink-500"
+                            )}
+                            disabled={disableAdd()}
                         >
-                            Add Product
+                            {disableAdd() ? (
+                                "Add Product"
+                            ) : disable ? (
+                                "Add Product"
+                            ) : (
+                                <div className="flex items-center justify-center">
+                                    <div className="w-7 h-7 bg-transparent border-[3px] border-t-[3px] border-t-transparent animate-spin border-white rounded-full"></div>
+                                </div>
+                            )}
                         </button>
                     </div>
                 </form>
