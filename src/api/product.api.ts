@@ -1,6 +1,8 @@
-import { PageResponse, Product, SearchParams } from "@/data/Interface";
+import { Product } from "@/data/Product.interface";
 import AxiosClient from "./axiosClient/AxiosClient";
 import { AxiosResponse } from "axios";
+import { PageResponse, SearchParams } from "@/data/Interface";
+import { ApiResponse } from "@/data/payload";
 
 const ProductAPI = {
     getAllProducts: (
@@ -8,7 +10,7 @@ const ProductAPI = {
         pageSize: number,
         sortBy: string,
         sortDir: string
-    ): Promise<AxiosResponse<PageResponse<Product>>> => {
+    ): Promise<PageResponse<Product>> => {
         const url = `products?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
         return AxiosClient.get(url);
     },
@@ -16,7 +18,7 @@ const ProductAPI = {
         const url = `products/search-by-name?keyword=${searchParam.keyWord}&pageNo=${searchParam.pageNo}&pageSize=${searchParam.pageSize}&sortBy=${searchParam.sortBy}&sortDir=${searchParam.sortDir}`;
         return AxiosClient.get(url);
     },
-    serachProductByCategory: (
+    searchProductByCategory: (
         categoryname: string,
         pageNo: number,
         pageSize: number,
@@ -49,9 +51,13 @@ const ProductAPI = {
         const url = `product/${id}`;
         return AxiosClient.put(url, product);
     },
-    deleteProduct: (id: string) => {
+    deleteProduct: (id: string): Promise<ApiResponse> => {
         const url = `product/${id}`;
         return AxiosClient.delete(url);
+    },
+    getProductBySlug: (slug: string): Promise<AxiosResponse<Product>> => {
+        const url = `product/slug/${slug}`;
+        return AxiosClient.get(url);
     },
 };
 export default ProductAPI;
