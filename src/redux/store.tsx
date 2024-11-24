@@ -1,8 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-const loadState = () => {
+interface RootStateCustom {
+    app: AppState;
+    user: UserState;
+}
+
+const loadState = (): RootStateCustom | undefined => {
     try {
         const serializedState = sessionStorage.getItem("state");
         if (serializedState === null) {
@@ -24,15 +28,18 @@ const saveState = (state: RootState) => {
 };
 
 const persistedState = loadState();
-
+import appReducer, { AppState } from "./appSlice";
+import userReducer, { UserState } from "./userSlice";
 const store = configureStore({
     reducer: {
-        users: userReducer,
+        app: appReducer,
+        user: userReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false,
         }),
+
     preloadedState: persistedState,
 });
 
