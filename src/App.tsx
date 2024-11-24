@@ -19,7 +19,7 @@
 
 const App = () => {
     return (
-        <div className='bg-gradient-to-t from-orange-400 via-red-500 to-pink-500 bg-repeat h-screen'>
+        <div className="bg-gradient-to-t from-orange-400 via-red-500 to-pink-500 bg-repeat h-screen">
             {/* <Routes>
                 <Route path='/' element={<Navigate to='/admin' />} />
                 <Route path='/login' element={<Login />} />
