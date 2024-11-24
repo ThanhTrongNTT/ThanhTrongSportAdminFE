@@ -1,11 +1,17 @@
-import { useWatch } from 'react-hook-form';
-import classNames from '@/utils/classNames';
+import {
+    Control,
+    FieldValues,
+    UseFormSetValue,
+    useWatch,
+} from "react-hook-form";
+import classNames from "@/utils/classNames";
+import { ChangeEvent } from "react";
 
 type PropTypes = {
     name: string;
     control: any;
     dropdownLabel: string;
-    setValue: Function;
+    setValue: UseFormSetValue<any>;
     list: Array<string>;
     className: string;
 };
@@ -13,7 +19,7 @@ type PropTypes = {
 const Dropdown = ({
     name,
     control,
-    dropdownLabel = '',
+    dropdownLabel = "",
     setValue,
     list = [],
     className,
@@ -24,22 +30,24 @@ const Dropdown = ({
         defaultValue: dropdownLabel, // default value before the render
     });
 
-    const handleGetValue = (e: any) => {
+    const handleGetValue = async (e: ChangeEvent<HTMLSelectElement>) => {
         setValue(name, e.target.value);
-        console.log(e.target.value);
     };
 
     return (
         <select
-            defaultValue={dropdownLabel}
+            value={dropdownValue}
             onChange={handleGetValue}
-            className={classNames('px-5 py-3 rounded-md border border-c6', className)}
+            className={classNames(
+                "px-5 py-3 rounded-md border border-c6 text-lg",
+                className
+            )}
         >
-            <option value={dropdownLabel} disabled>
+            <option value={dropdownLabel} className="font-semibold" disabled>
                 {dropdownLabel}
             </option>
             {list.map((item, index) => (
-                <option data-value={item} key={index}>
+                <option value={item} key={index} className="font-semibold">
                     {item}
                 </option>
             ))}

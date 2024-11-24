@@ -18,7 +18,7 @@ const UserCard = ({
     handleActive,
 }: UserCardProps) => {
     return (
-        <div className="bg-white border-sm shadow-lg h-[390px] w-1/5 p-5 m-4 rounded-md">
+        <div className="bg-white border-sm shadow-lg h-[450px] w-1/5 p-5 m-4 rounded-md">
             <ImageCustom
                 alt={"Test"}
                 src={"https://hd-book-store.vercel.app/images/db_bg.jpeg"}
@@ -44,14 +44,7 @@ const UserCard = ({
                 </div>
                 <span>
                     Full Name:{" "}
-                    <span className="font-normal">
-                        {user.userProfile.firstName === null &&
-                        user.userProfile.lastName === null
-                            ? "No Name"
-                            : user.userProfile.firstName +
-                              " " +
-                              user.userProfile.lastName}
-                    </span>
+                    <span className="font-normal">{user.userProfile.name}</span>
                 </span>
             </div>
             <div className="flex justify-between font-bold p-5">
