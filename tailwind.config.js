@@ -6,6 +6,9 @@ export default {
     content: ["./src/**/*.{js,ts,jsx,tsx}", flowbite.content()],
     theme: {
         extend: {
+            backgroundImage: {
+                "banner-login": "url('/src/assets/website/background.jpg')",
+            },
             fontFamily: {
                 Poppins: ["Poppins", "sans-serif"],
                 OpenSans: ["Open Sans", "sans-serif"],
