@@ -1,26 +1,11 @@
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { IconMyProfile, IconSigout } from "@/components/icon/Icon";
+import { IconLogout, IconMyProfile } from "@/components/icon/Icon";
 import WrapperMenu from "@/components/wrapper/WrapperMenu";
-import { resetUserState } from "@/redux/userSlice";
+import { Link } from "react-router-dom";
 
-const Menu = () => {
-    const dispatch = useDispatch();
-    const handlerLogout = () => {
-        sessionStorage.clear();
-        localStorage.clear();
-        toast.success(`Logout success!`, {
-            autoClose: 500,
-            delay: 10,
-            draggable: true,
-            pauseOnHover: false,
-        });
-        dispatch(resetUserState());
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
-    };
+interface MenuProps {
+    handleLogout: () => void;
+}
+const Menu = ({ handleLogout }: MenuProps) => {
     return (
         <WrapperMenu>
             <Link to={"/profile"}>
@@ -33,10 +18,10 @@ const Menu = () => {
             </Link>
             <div
                 className="flex cursor-pointer items-center gap-5 px-5 py-4 text-[#23262F] transition-all hover:bg-[#16182308] dark:text-c7"
-                onClick={handlerLogout}
+                onClick={handleLogout}
             >
                 <span className="text-[#777E90] dark:text-c5">
-                    <IconSigout />
+                    <IconLogout />
                 </span>
                 <span className="p-1.5">Logout</span>
             </div>

@@ -1,28 +1,70 @@
 import {
-    IconBlog,
+    IconProduct,
+    IconCoupon,
     IconCategory,
-    IconCourse,
     IconDashboard,
-    IconSize,
-    IconUser,
+    IconOrder,
+    IconSaleSideBar,
+    IconUserSideBar,
 } from "@/components/icon/Icon";
 import LogoDefault from "@/components/logo/LogoDefault";
-import { Link, useNavigate } from "react-router-dom";
+import classNames from "@/utils/classNames";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+const Menus = [
+    {
+        title: "Dashboard",
+        link: "/admin",
+        icon: <IconDashboard />,
+        isActive: true,
+    },
+    {
+        title: "User",
+        link: "user",
+        icon: <IconUserSideBar />,
+        isActive: false,
+    },
+    {
+        title: "Product",
+        link: "product",
+        icon: <IconProduct />,
+        isActive: false,
+    },
+    {
+        title: "Category",
+        link: "category",
+        icon: <IconCategory />,
+        isActive: false,
+    },
+    {
+        title: "Sale",
+        link: "sale",
+        icon: <IconSaleSideBar />,
+        isActive: false,
+    },
+    {
+        title: "Coupon",
+        link: "coupon",
+        icon: <IconCoupon />,
+        isActive: false,
+    },
+    { title: "Order", link: "order", icon: <IconOrder />, isActive: false },
+];
 const SideBar = () => {
-    const Menus = [
-        { title: "Dashboard", link: "/admin" },
-        { title: "User", link: "user", icon: <IconUser /> },
-        {
-            title: "Product",
-            link: "product",
-            icon: <IconBlog />,
-        },
-        { title: "Category", link: "category", icon: <IconCourse /> },
-        { title: "Order", link: "order", icon: <IconCategory /> },
-        { title: "Size", link: "size", icon: <IconSize /> },
-    ];
+    const [menus, setMenus] = useState(Menus);
     const navigate = useNavigate();
+    const handleMenuClick = (index: number) => {
+        setMenus((prevMenus) =>
+            prevMenus.map((menu, i) => {
+                if (i === index) {
+                    return { ...menu, isActive: !menu.isActive };
+                }
+                return { ...menu, isActive: false };
+            })
+        );
+        navigate(menus[index].link);
+    };
     return (
         <div className="bg-white h-fit rounded-xl m-4 w-20 lg:w-60 fixed top-0">
             <div className="flex justify-center p-10">
@@ -30,29 +72,30 @@ const SideBar = () => {
             </div>
             <hr className="mx-6 border-1.5 border-gray-c2" />
             <div className="px-6">
-                <ul className="pt-2">
-                    {Menus.map((menu, index) => (
+                <ul className="py-4">
+                    {menus.map((menu, index) => (
                         <li
                             key={index}
-                            className="text-black text-sm flex font-OpenSans items-center gap-x-4 cursor-pointer p-2 hover:bg-gray-c2 rounded-md mt-2 justify-between"
+                            className={classNames(
+                                "text-black text-sm flex font-OpenSans items-center gap-x-4 cursor-pointer p-2 hover:bg-gray-c2 rounded-md mt-2 justify-between",
+                                menu.isActive ? "bg-gray-c2" : ""
+                            )}
                             onClick={() => {
-                                navigate(menu.link);
+                                handleMenuClick(index);
                             }}
                         >
-                            <Link to={menu.link} className="flex items-center">
+                            <div className="flex items-center gap-x-2">
                                 <span className="text-2l block float-left">
-                                    {menu.icon ? menu.icon : <IconDashboard />}
+                                    {menu.icon}
                                 </span>
                                 <span className="text-base font-OpenSans font-medium flex-1 duration-200">
                                     {menu.title}
                                 </span>
-                            </Link>
+                            </div>
                         </li>
                     ))}
                 </ul>
             </div>
-            <hr className="mx-6 border-1.5 border-gray-c2" />
-            <div className="p-6 flex flex-col"></div>
         </div>
     );
 };

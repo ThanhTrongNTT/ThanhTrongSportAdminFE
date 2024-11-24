@@ -16,11 +16,11 @@ const LayoutDefault = () => {
 
     // dispatch(update(userProfile));
     return (
-        <div className="flex bg-transparent h-screen">
-            <div className="flex-initial w-[25%]">
+        <div className="flex bg-transparent bg-repeat min-h-screen">
+            <div className="flex-initial w-1/6">
                 <SideBar />
             </div>
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-5/6">
                 <Navbar />
                 <Outlet />
             </div>
