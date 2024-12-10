@@ -1,0 +1,1 @@
+import{A as t}from"./index-C1Wk_G0d.js";const o={getAllSales:async(e,s,l,r)=>{const a=`sales?pageNo=${e}&pageSize=${s}&sortBy=${l}&sortDir=${r}`;return t.get(a)},getListSales:async()=>t.get("sales/list"),createSale:async e=>t.post("sale",e),updateSale:async e=>{const s=`sale/${e.id}`;return t.put(s,e)},deleteSale:async e=>{const s=`sale/${e}`;return t.delete(s)}};export{o as s};
