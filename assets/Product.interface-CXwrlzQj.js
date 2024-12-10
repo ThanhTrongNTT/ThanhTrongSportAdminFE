@@ -1,0 +1,1 @@
+const i={id:"",fileName:"",fileType:"",url:""},e={id:"",code:"",displayCode:"",name:""},o={id:"",productName:"",freeInformation:"",longDescription:"",washingInformation:"",slug:"",basePrice:0,promoPrice:null,gender:null,category:null,sales:null,subImages:[]},n={id:"",color:null,size:"",stock:0,mainImage:i,product:o};export{n as a,e as b,o as i};
