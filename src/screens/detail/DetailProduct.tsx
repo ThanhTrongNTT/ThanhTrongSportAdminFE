@@ -78,7 +78,10 @@ const DetailProduct = ({
                     delay: 50,
                 });
                 setDisable(true);
-                setMediaFiles([...mediaFiles, response.data]);
+                const newImages = Array.isArray(response.data)
+                    ? response.data
+                    : [response.data];
+                setMediaFiles([...mediaFiles, ...newImages]);
             }
             setDisable(true);
         });
