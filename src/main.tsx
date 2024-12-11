@@ -16,7 +16,7 @@ root.render(
     // <React.StrictMode>
     <Suspense fallback={<Loading />}>
         <Provider store={store}>
-            <Router>
+            <Router basename="/ThanhTrongSportAdminFE">
                 <ToastContainer />
                 <DeclareRouter />
             </Router>

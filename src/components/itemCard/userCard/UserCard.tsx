@@ -1,5 +1,5 @@
 import ImageCustom from "@/components/image/ImageCustom";
-import { User } from "@/data/Interface";
+import { User } from "@/data/User.interface";
 import classNames from "@/utils/classNames";
 
 type UserCardProps = {
@@ -18,10 +18,13 @@ const UserCard = ({
     handleActive,
 }: UserCardProps) => {
     return (
-        <div className="bg-white border-sm shadow-lg h-[450px] w-1/5 p-5 m-4 rounded-md">
+        <div className="bg-white border-sm shadow-lg w-1/5 p-5 m-4 rounded-md">
             <ImageCustom
                 alt={"Test"}
-                src={"https://hd-book-store.vercel.app/images/db_bg.jpeg"}
+                src={
+                    user.userProfile?.avatar?.url ||
+                    "https://hd-book-store.vercel.app/images/db_bg.jpeg"
+                }
             />
             <div className="flex flex-col pt-5 pl-5 font-bold">
                 <h1>
@@ -44,7 +47,9 @@ const UserCard = ({
                 </div>
                 <span>
                     Full Name:{" "}
-                    <span className="font-normal">{user.userProfile.name}</span>
+                    <span className="font-normal">
+                        {user.userProfile?.name}
+                    </span>
                 </span>
             </div>
             <div className="flex justify-between font-bold p-5">

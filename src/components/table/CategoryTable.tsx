@@ -1,5 +1,5 @@
 import CategoryAPI from "@/api/category.api";
-import { Category } from "@/data/Interface";
+import { Category } from "@/data/Product.interface";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -8,12 +8,16 @@ interface CategoryTableProps {
     categories: Category[];
     parentCategory: Category;
     handleCreateNewCategory: (data: Category) => void;
+    handleUpdateCategory: (data: Category) => void;
+    handleDeleteCategory: (id: string) => void;
 }
 
 const CategoryTable: React.FC<CategoryTableProps> = ({
     categories,
     parentCategory,
     handleCreateNewCategory,
+    handleUpdateCategory,
+    handleDeleteCategory,
 }) => {
     const [editMode, setEditMode] = useState<string | null>(null);
     const [editedCategory, setEditedCategory] = useState<Category>({
@@ -31,14 +35,12 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
     const [showForm, setShowForm] = useState(false);
 
     const handleEdit = (category: Category) => {
-        setEditMode(category.id);
+        setEditMode(category.id || "");
         setEditedCategory({ ...category });
     };
 
     const handleDelete = (id: string) => {
-        console.log(id);
-
-        toast.success("Category deleted successfully!");
+        handleDeleteCategory(id);
     };
 
     const handleCreateCategory = () => {
@@ -69,6 +71,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
     };
 
     const handleSave = () => {
+        handleUpdateCategory(editedCategory);
         if (editMode && editedCategory) {
             const index = categories.findIndex((cat) => cat.id === editMode);
             categories[index] = { ...editedCategory };
@@ -109,12 +112,12 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
 
     return (
         <div>
-            <h1 className="m-2 font-bold text-lg">Category Table</h1>
+            <h1 className="m-2 font-bold text-lg">Danh mục con</h1>
             <button
                 onClick={() => setShowForm(!showForm)}
                 className="px-3 font-bold py-1 bg-blue-500 text-white rounded mb-5 hover:bg-white hover:text-blue-500 border border-blue-500 transition"
             >
-                Add
+                Thêm mới
             </button>
             {showForm && (
                 <>
@@ -122,7 +125,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
                     <div className="flex min-w-full p-2 mb-5 border justify-between">
                         <div>
                             <label>
-                                Category Name:
+                                Tên:
                                 <input
                                     type="text"
                                     name="categoryName"
@@ -135,7 +138,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
                         </div>
                         <div>
                             <label>
-                                Locale:
+                                Tên hiển thị:
                                 <input
                                     type="text"
                                     name="locale"
@@ -151,13 +154,13 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
                                 className="px-3 font-bold py-1 bg-blue-500 text-white rounded mr-2 hover:bg-white hover:text-blue-500 border border-blue-500 transition"
                                 onClick={handleCreateCategory}
                             >
-                                Add
+                                Thêm
                             </button>
                             <button
                                 className="px-3 font-bold py-1 bg-red-500 text-white rounded mr-2 hover:bg-white hover:text-red-500 border border-red-500 transition"
                                 onClick={handleCancelAdd}
                             >
-                                Cancel
+                                Hủy
                             </button>
                         </div>
                     </div>
@@ -166,10 +169,9 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
             <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                     <tr>
-                        <th className="py-2 px-4 border-b">Category Name</th>
-                        <th className="py-2 px-4 border-b">Level</th>
-                        <th className="py-2 px-4 border-b">Locale</th>
-                        <th className="py-2 px-4 border-b">Parent Category</th>
+                        <th className="py-2 px-4 border-b">Tên</th>
+                        <th className="py-2 px-4 border-b">Tên hiển thị</th>
+                        <th className="py-2 px-4 border-b">Danh mục cha</th>
                         <th className="py-2 px-4 border-b">Actions</th>
                     </tr>
                 </thead>
@@ -193,11 +195,6 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
                                 )}
                             </td>
 
-                            {/* Hiển thị trường level */}
-                            <td className="py-2 px-4 border-b">
-                                {category.level}
-                            </td>
-
                             {/* Hiển thị trường locale */}
                             <td className="py-2 px-4 border-b">
                                 {editMode === category.id ? (
@@ -216,7 +213,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
                             {/* Hiển thị trường parentCategory */}
                             <td className="py-2 px-4 border-b">
                                 {category.parentCategory
-                                    ? category.parentCategory.categoryName
+                                    ? category.parentCategory.locale
                                     : "N/A"}
                             </td>
 

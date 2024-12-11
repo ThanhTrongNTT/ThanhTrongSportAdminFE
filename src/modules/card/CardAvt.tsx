@@ -9,7 +9,7 @@ import { RootState } from "@/redux/store";
 import ImageCustom from "@/components/image/ImageCustom";
 
 const CardAvt = () => {
-    const { userInfo } = useSelector((state: RootState) => state.users);
+    const { userInfo } = useSelector((state: RootState) => state.user);
     const {
         handleSubmit,
         setValue,
@@ -77,8 +77,8 @@ const CardAvt = () => {
         // }
     };
     useEffect(() => {
-        setBaseImg(userInfo.userProfile.avatar.url);
-    }, [userInfo.userProfile.avatar.url]);
+        setBaseImg(userInfo?.userProfile?.avatar?.url);
+    }, [userInfo?.userProfile?.avatar?.url]);
 
     // const onSubmit = ({ avatar }: any) => console.log(avatar);
     return (

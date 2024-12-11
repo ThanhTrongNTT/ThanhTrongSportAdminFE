@@ -1,10 +1,12 @@
 import CategoryAPI from "@/api/category.api";
 import MediaFileAPI from "@/api/mediaFile.api";
 import DropdownCategory from "@/components/dropdown/DropdownCategory";
+import DropdownSale from "@/components/dropdown/DropdownSale";
 import Field from "@/components/field/Field";
 import ImageCustom from "@/components/image/ImageCustom";
 import { Image } from "@/data/Image.interface";
 import { Category, initProduct, Product } from "@/data/Product.interface";
+import { Sale } from "@/data/Sale.interface";
 import classNames from "@/utils/classNames";
 import { ProductSchema } from "@/utils/schema.resolver";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,14 +17,16 @@ import { toast } from "react-toastify";
 type DetailProductProps = {
     // Props here
     product: Product;
-    handleUpdate: (product: Product) => void;
+    handleUpdate: (data: FieldValues) => void;
     genders: Category[];
+    sales: Sale[];
 };
 
 const DetailProduct = ({
     product,
     handleUpdate,
     genders,
+    sales,
 }: DetailProductProps) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [disable, setDisable] = useState<boolean>(true);
@@ -74,7 +78,7 @@ const DetailProduct = ({
                     delay: 50,
                 });
                 setDisable(true);
-                setMediaFiles(response.data);
+                setMediaFiles([...mediaFiles, response.data]);
             }
             setDisable(true);
         });
@@ -94,7 +98,7 @@ const DetailProduct = ({
     };
     const onSubmit = (data: FieldValues) => {
         console.log("data", data);
-        // handleUpdate(productUpdate);
+        handleUpdate(data);
     };
     const fetchCategories = (id: string) => {
         CategoryAPI.getChildCategory(id).then((response) => {
@@ -133,7 +137,7 @@ const DetailProduct = ({
             <div className="bg-white mt-10 rounded-md px-10 pt-10 pb-5">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <h1 className="font-bold text-lg flex justify-center">
-                        Product Infomation
+                        Thông tin sản phẩm
                     </h1>
                     <div className="text-right mt-10">
                         <div className="grid grid-cols-2 gap-10">
@@ -142,13 +146,14 @@ const DetailProduct = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Name
+                                    Tên sản phẩm{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="productName"
                                     id="product-name"
-                                    placeholder="Enter product name..."
+                                    placeholder="Nhập tên sản phẩm..."
                                     error={errors.productName?.message ?? ""}
                                 />
                             </div>
@@ -157,13 +162,14 @@ const DetailProduct = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Long Description
+                                    Mô tả{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="longDescription"
                                     id="long-description"
-                                    placeholder="Enter Long Description..."
+                                    placeholder="Nhập mô tả của sản phẩm..."
                                     error={
                                         errors.longDescription?.message ?? ""
                                     }
@@ -176,13 +182,14 @@ const DetailProduct = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Free Information
+                                    Thông tin cơ bản{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="freeInformation"
                                     id="product-name"
-                                    placeholder="Enter Free Information..."
+                                    placeholder="Nhập thông tin cơ bản của sản phẩm..."
                                     error={
                                         errors.freeInformation?.message ?? ""
                                     }
@@ -193,13 +200,14 @@ const DetailProduct = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Slug
+                                    Slug{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="slug"
                                     id="product-slug"
-                                    placeholder="Enter Slug..."
+                                    placeholder="Nhập Slug..."
                                     error={errors.slug?.message ?? ""}
                                 >
                                     Product Slug
@@ -212,13 +220,14 @@ const DetailProduct = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Price
+                                    Giá{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="basePrice"
                                     id="basePrice"
-                                    placeholder="Enter price..."
+                                    placeholder="Nhập giá ..."
                                     type="number"
                                     error={errors.basePrice?.message ?? ""}
                                 >
@@ -230,13 +239,14 @@ const DetailProduct = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Washing Information
+                                    Thông tin giặt giũ{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="washingInformation"
                                     id="quantity"
-                                    placeholder="Enter Washing Information..."
+                                    placeholder="Nhập thông tin về giặt giũ..."
                                     error={
                                         errors.washingInformation?.message ?? ""
                                     }
@@ -251,7 +261,8 @@ const DetailProduct = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Gender
+                                    Giới tính{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Controller
                                     name="gender"
@@ -261,7 +272,7 @@ const DetailProduct = ({
                                             field={field}
                                             dropdownLabel={
                                                 product.gender?.locale ||
-                                                "Select Gender"
+                                                "Lựa chọn giới tính"
                                             }
                                             list={genders}
                                             error={errors.gender?.message ?? ""}
@@ -295,6 +306,30 @@ const DetailProduct = ({
                                 />
                             </div>
                         </div>
+                        <div className="grid grid-cols-2 gap-10 mt-10">
+                            <div className="flex flex-col gap-2 text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Khuyến mãi
+                                </label>
+                                <Controller
+                                    name="sales"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <DropdownSale
+                                            field={field}
+                                            dropdownLabel={
+                                                "lựa chọn khuyến mãi"
+                                            }
+                                            list={sales}
+                                            error={errors.sales?.message ?? ""}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
                         <div className="mt-10 text-left flex items-center">
                             <input
                                 type="file"
@@ -302,7 +337,7 @@ const DetailProduct = ({
                                 onChange={handleChange}
                                 className="w-2/4 px-4 py-2 rounded-lg border border-c6"
                             />
-                            <button
+                            {/* <button
                                 type="button"
                                 onClick={uploadFiles}
                                 className={classNames(
@@ -319,10 +354,10 @@ const DetailProduct = ({
                                         <div className="w-7 h-7 bg-transparent border-[3px] border-t-[3px] border-t-transparent animate-spin border-white rounded-full"></div>
                                     </div>
                                 )}
-                            </button>
+                            </button> */}
                         </div>
                         <div className="flex mt-2">
-                            {mediaFiles.length > 0 &&
+                            {/* {mediaFiles.length > 0 &&
                                 mediaFiles.map((image) => (
                                     <ImageCustom
                                         key={image.id}
@@ -330,7 +365,7 @@ const DetailProduct = ({
                                         alt={image.fileName}
                                         src={image.url}
                                     />
-                                ))}
+                                ))} */}
                         </div>
                         <button
                             type="submit"

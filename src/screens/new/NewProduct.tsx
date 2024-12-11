@@ -2,9 +2,11 @@
 import CategoryAPI from "@/api/category.api";
 import MediaFileAPI from "@/api/mediaFile.api";
 import DropdownCategory from "@/components/dropdown/DropdownCategory";
+import DropdownSale from "@/components/dropdown/DropdownSale";
 import Field from "@/components/field/Field";
 import { Image } from "@/data/Image.interface";
 import { Category, initProduct, Product } from "@/data/Product.interface";
+import { Sale } from "@/data/Sale.interface";
 import classNames from "@/utils/classNames";
 import { ProductSchema } from "@/utils/schema.resolver";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,9 +17,10 @@ import { toast } from "react-toastify";
 interface NewProductProps {
     handleCreateNew: (product: Product) => void;
     genders: Category[];
+    sales: Sale[];
 }
 
-const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
+const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const {
         handleSubmit,
@@ -174,8 +177,8 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
         <div className="w-[1000px]">
             <div className="bg-white mt-10 rounded-md px-10 pt-10 pb-5">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <h1 className="font-bold text-lg flex justify-center">
-                        Product Infomation
+                    <h1 className="font-bold text-2xl flex justify-center">
+                        Thêm mới sản phẩm
                     </h1>
                     <div className="text-right mt-10">
                         <div className="grid grid-cols-2 gap-10">
@@ -184,13 +187,14 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Name
+                                    Tên sản phẩm{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="productName"
                                     id="product-name"
-                                    placeholder="Enter product name..."
+                                    placeholder="Nhập tên sản phẩm..."
                                     error={errors.productName?.message ?? ""}
                                 />
                             </div>
@@ -199,13 +203,14 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Long Description
+                                    Mô tả{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="longDescription"
                                     id="long-description"
-                                    placeholder="Enter Long Description..."
+                                    placeholder="Nhập mô tả của sản phẩm..."
                                     error={
                                         errors.longDescription?.message ?? ""
                                     }
@@ -218,13 +223,14 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Free Information
+                                    Thông tin cơ bản{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="freeInformation"
                                     id="product-name"
-                                    placeholder="Enter Free Information..."
+                                    placeholder="Nhập thông tin cơ bản của sản phẩm..."
                                     error={
                                         errors.freeInformation?.message ?? ""
                                     }
@@ -235,13 +241,14 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Slug
+                                    Slug{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="slug"
                                     id="product-slug"
-                                    placeholder="Enter Slug..."
+                                    placeholder="Nhập Slug..."
                                     error={errors.slug?.message ?? ""}
                                     // onChange={(
                                     //     e: ChangeEvent<HTMLInputElement>
@@ -251,9 +258,7 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     //         slug: e.target.value,
                                     //     })
                                     // }
-                                >
-                                    Product Slug
-                                </Field>
+                                />
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-10 mt-10">
@@ -262,13 +267,14 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Price
+                                    Giá{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="basePrice"
                                     id="basePrice"
-                                    placeholder="Enter price..."
+                                    placeholder="Nhập giá cơ bản..."
                                     type="number"
                                     error={errors.basePrice?.message ?? ""}
                                     // onChange={(
@@ -288,13 +294,14 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Washing Information
+                                    Thông tin giặt giũ{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="washingInformation"
                                     id="quantity"
-                                    placeholder="Enter Washing Information..."
+                                    placeholder="Nhập thông tin về giặt giũ..."
                                     error={
                                         errors.washingInformation?.message ?? ""
                                     }
@@ -306,9 +313,7 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     //         washingInformation: e.target.value,
                                     //     })
                                     // }
-                                >
-                                    Product Washing Information
-                                </Field>
+                                />
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-10 mt-10">
@@ -317,7 +322,8 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Gender
+                                    Giới tính{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 {/* <Dropdown
                                     className=""
@@ -333,7 +339,7 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     render={({ field }) => (
                                         <DropdownCategory
                                             field={field}
-                                            dropdownLabel={"Select Gender"}
+                                            dropdownLabel={"Lựa chọn giới tính"}
                                             list={genders}
                                             error={errors.gender?.message ?? ""}
                                         />
@@ -345,7 +351,8 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Product Category
+                                    Loại sản phẩm{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 {/* <Dropdown
                                     className=""
@@ -361,11 +368,35 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                     render={({ field }) => (
                                         <DropdownCategory
                                             field={field}
-                                            dropdownLabel={"Select category"}
+                                            dropdownLabel={"lựa chọn phân loại"}
                                             list={categories}
                                             error={
                                                 errors.category?.message ?? ""
                                             }
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-10 mt-10">
+                            <div className="flex flex-col gap-2 text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Khuyến mãi
+                                </label>
+                                <Controller
+                                    name="sales"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <DropdownSale
+                                            field={field}
+                                            dropdownLabel={
+                                                "lựa chọn khuyến mãi"
+                                            }
+                                            list={sales}
+                                            error={errors.sales?.message ?? ""}
                                         />
                                     )}
                                 />
@@ -376,7 +407,10 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                 htmlFor="file_input"
                             >
-                                Upload file
+                                Upload file{" "}
+                                <span className="text-red-500">
+                                    (* Cần có ít nhất 1 ảnh của sản phẩm)
+                                </span>
                             </label>
                             <div className="flex">
                                 <input
@@ -428,9 +462,9 @@ const NewProduct = ({ handleCreateNew, genders }: NewProductProps) => {
                             disabled={disableAdd()}
                         >
                             {disableAdd() ? (
-                                "Add Product"
+                                "Thêm mới"
                             ) : disable ? (
-                                "Add Product"
+                                "Thêm mới"
                             ) : (
                                 <div className="flex items-center justify-center">
                                     <div className="w-7 h-7 bg-transparent border-[3px] border-t-[3px] border-t-transparent animate-spin border-white rounded-full"></div>

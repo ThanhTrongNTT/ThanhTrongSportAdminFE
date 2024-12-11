@@ -1,29 +1,34 @@
-import { Product } from "./Product.interface";
+import { ProductItem } from "./Product.interface";
 import { User } from "./User.interface";
-
-export interface CartDetail {
-    id?: string;
-    product: Product;
-    quantity: number;
-    removalFlag: boolean;
-}
-export interface Cart {
-    id?: string;
-    user: User;
-    total: number;
-    cartDetails: CartDetail[];
-    removalFlag: boolean;
-}
-export interface OrderDetail {
-    id: string;
-    cart: Cart;
-    total: number;
-    removalFlag: boolean;
-}
 export interface Order {
-    id: string;
-    orderDate?: string;
-    totalPrice: number;
+    id?: string;
+    productsCount?: number;
+    note?: string;
     user?: User;
-    orderDetails?: OrderDetail;
+    subTotal?: number;
+    tax?: number;
+    total?: number;
+    status?: string;
+    paymentMethod?: string;
+    address?: Address;
+    isPaid?: boolean;
+}
+
+interface Address {
+    addressData?: string;
+    ward?: string;
+    district?: string;
+    province?: string;
+    phone?: string;
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+}
+
+export interface OrderItem {
+    id?: string;
+    quantity?: number;
+    product?: ProductItem;
+    order?: Order;
+    subTotal?: number;
 }

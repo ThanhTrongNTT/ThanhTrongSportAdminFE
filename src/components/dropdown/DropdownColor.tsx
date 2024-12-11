@@ -1,16 +1,16 @@
 import React from "react";
 import classNames from "@/utils/classNames";
-import { Category } from "@/data/Product.interface";
+import { Category, Color } from "@/data/Product.interface";
 
 type PropTypes = {
     field: any;
     dropdownLabel: string;
-    list: Category[];
+    list: Color[];
     className?: string;
     error: string;
 };
 
-const DropdownCategory = ({
+const DropdownColor = ({
     field,
     dropdownLabel = "",
     list = [],
@@ -24,13 +24,13 @@ const DropdownCategory = ({
             <select
                 value={value?.id || ""}
                 onChange={(e) => {
-                    const selectedSize = list.find(
-                        (size) => size.id === e.target.value
+                    const selectedColor = list.find(
+                        (color) => color.id === e.target.value
                     );
-                    onChange(selectedSize);
+                    onChange(selectedColor);
                 }}
                 className={classNames(
-                    "px-5 py-3 rounded-md border border-c6 text-lg",
+                    "px-5 py-3 rounded-md border border-c6 text-lg w-full",
                     className,
                     error.length > 0
                         ? "border-red-700"
@@ -42,7 +42,7 @@ const DropdownCategory = ({
                 </option>
                 {list.map((item, index) => (
                     <option value={item.id} key={index}>
-                        {item.locale}
+                        {item.name}
                     </option>
                 ))}
             </select>
@@ -51,4 +51,4 @@ const DropdownCategory = ({
     );
 };
 
-export default DropdownCategory;
+export default DropdownColor;

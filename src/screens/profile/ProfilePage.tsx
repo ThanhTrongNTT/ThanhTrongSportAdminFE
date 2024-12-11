@@ -1,4 +1,3 @@
-import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,7 +16,7 @@ import { RootState, useAppSelector } from "@/redux/store";
 
 const ProfilePage = () => {
     const dispatch = useDispatch();
-    const { userInfo } = useAppSelector((state: RootState) => state.users);
+    const { userInfo } = useAppSelector((state: RootState) => state.user);
     const navigate = useNavigate();
     const { handleSubmit, control, setValue, setFocus } = useForm({
         mode: "onChange",
@@ -34,11 +33,8 @@ const ProfilePage = () => {
     //     getUser();
     // }, [decode.sub]);
 
-    setValue(
-        "fullName",
-        userInfo.userProfile.firstName + " " + userInfo.userProfile.lastName
-    );
-    setValue("email", userInfo.email);
+    setValue("fullName", userInfo?.userProfile?.name);
+    setValue("email", userInfo?.email);
     useEffect(() => {
         document.title = "Profile";
     }, []);
@@ -125,10 +121,7 @@ const ProfilePage = () => {
                     <div className="mb-2 flex justify-between">
                         <p className="text-grayScale-c2 text-xl font-medium dark:text-white lg:text-2xl">
                             {/* Hi, I'm {user.fullName} */}
-                            Hi, I'm{" "}
-                            {userInfo.userProfile.firstName +
-                                " " +
-                                userInfo.userProfile.lastName}
+                            Hi, I'm {userInfo?.userProfile?.name}
                         </p>
                         <button
                             disabled={disableBtnEdit}

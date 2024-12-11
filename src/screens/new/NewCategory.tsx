@@ -1,15 +1,10 @@
 import Field from "@/components/field/Field";
-import { Category } from "@/data/Interface";
+import { Category } from "@/data/Product.interface";
+import { categorySchema } from "@/utils/schema.resolver";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ChangeEvent, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import * as Yup from "yup";
-
-const schame = Yup.object({
-    categoryName: Yup.string().required("Please enter your Category name!"),
-    locale: Yup.string().required("Please enter your Locale!"),
-});
 
 interface NewCategoryProps {
     category: Category;
@@ -27,8 +22,8 @@ const NewCategory = ({
         control,
         reset,
         formState: { errors },
-    } = useForm({
-        resolver: yupResolver(schame),
+    } = useForm<Category>({
+        resolver: yupResolver(categorySchema),
         mode: "onSubmit",
         defaultValues: {
             categoryName: category.categoryName,
@@ -85,7 +80,7 @@ const NewCategory = ({
                 {/* <form onSubmit={handleSubmit(onSubmit)}> */}
                 <form onSubmit={handleSubmit(submit)}>
                     <h1 className="font-bold text-2xl text-center">
-                        Create Category
+                        Khởi tạo danh mục
                     </h1>
                     <div className="text-right mt-10">
                         <div className="grid grid-cols-2 gap-10">
@@ -94,13 +89,14 @@ const NewCategory = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Category Name
+                                    Tên{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="categoryName"
                                     id="category-name"
-                                    placeholder="Enter Category name..."
+                                    placeholder="Nhập tên..."
                                     error={errors.categoryName?.message ?? ""}
                                     onChange={(
                                         e: ChangeEvent<HTMLInputElement>
@@ -111,7 +107,7 @@ const NewCategory = ({
                                         })
                                     }
                                 >
-                                    Category Name
+                                    Tên danh mục
                                 </Field>
                             </div>
                             <div className="text-left">
@@ -119,13 +115,14 @@ const NewCategory = ({
                                     htmlFor=""
                                     className="text-lg font-semibold text-left"
                                 >
-                                    Category Locale
+                                    Tên hiển thị{" "}
+                                    <span className="text-red-500">(*)</span>
                                 </label>
                                 <Field
                                     control={control}
                                     name="locale"
                                     id="category-locale"
-                                    placeholder="Enter Locale..."
+                                    placeholder="Nhập tên hiển thị..."
                                     error={errors.locale?.message ?? ""}
                                     onChange={(
                                         e: ChangeEvent<HTMLInputElement>
@@ -144,7 +141,7 @@ const NewCategory = ({
                             type="submit"
                             className="mt-10 font-semibold text-white bg-gradient-to-br from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 px-4 py-2 rounded-md inline-block transition-all"
                         >
-                            Add Category
+                            Thêm mới
                         </button>
                     </div>
                 </form>

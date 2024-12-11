@@ -33,15 +33,12 @@ export interface LoginData {
 }
 
 export interface DataPageResponse<T> {
-    content: T[];
-    last: boolean;
-    totalElements: number;
+    items: T[];
     totalPages: number;
-    size: number;
-    number: number;
-    first: boolean;
-    numberOfElements: number;
-    empty: boolean;
+    totalItems: number;
+    itemCount: number;
+    pageSize: number;
+    currentPage: number;
 }
 export interface PageResponse<T> {
     result: boolean;

@@ -20,34 +20,34 @@ const ProductTable = ({
                 <thead>
                     <tr>
                         <th scope="col" className="py-3 px-6">
-                            Product Name
+                            Tên sản phẩm
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Long Description
+                            Mô tả
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Free Information
+                            Thông tin cơ bản
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Washing Information
+                            Thông tin giặt giũ
                         </th>
                         <th scope="col" className="py-3 px-6">
                             Slug
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Price
+                            Giá
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Sale
+                            Khuyến mãi
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Type
+                            Giới tính
                         </th>
                         <th scope="col" className="py-3 px-6">
-                            Category
+                            Loại
                         </th>
                         <th scope="col" className="px-6 text-center">
-                            Action
+                            Hành động
                         </th>
                     </tr>
                 </thead>
@@ -97,7 +97,9 @@ const ProductTable = ({
                                 scope="row"
                                 className="py-4 px-6 font-semibold text-red-500 whitespace-nowrap"
                             >
-                                {product.sales?.description ?? "No sale"}
+                                {product.sales?.discount
+                                    ? product.sales.discount + "%"
+                                    : "No sale"}
                             </td>
                             <td
                                 scope="row"

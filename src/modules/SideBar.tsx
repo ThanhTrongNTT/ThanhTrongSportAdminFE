@@ -6,6 +6,7 @@ import {
     IconOrder,
     IconSaleSideBar,
     IconUserSideBar,
+    IconColor,
 } from "@/components/icon/Icon";
 import LogoDefault from "@/components/logo/LogoDefault";
 import classNames from "@/utils/classNames";
@@ -20,36 +21,42 @@ const Menus = [
         isActive: true,
     },
     {
-        title: "User",
+        title: "Người dùng",
         link: "user",
         icon: <IconUserSideBar />,
         isActive: false,
     },
     {
-        title: "Product",
+        title: "Sản phẩm",
         link: "product",
         icon: <IconProduct />,
         isActive: false,
     },
     {
-        title: "Category",
+        title: "Danh mục",
         link: "category",
         icon: <IconCategory />,
         isActive: false,
     },
     {
-        title: "Sale",
+        title: "Khuyến mãi",
         link: "sale",
         icon: <IconSaleSideBar />,
         isActive: false,
     },
     {
-        title: "Coupon",
+        title: "Mã giảm giá",
         link: "coupon",
         icon: <IconCoupon />,
         isActive: false,
     },
-    { title: "Order", link: "order", icon: <IconOrder />, isActive: false },
+    {
+        title: "Màu sắc",
+        link: "color",
+        icon: <IconColor />,
+        isActive: false,
+    },
+    { title: "Đơn hàng", link: "order", icon: <IconOrder />, isActive: false },
 ];
 const SideBar = () => {
     const [menus, setMenus] = useState(Menus);

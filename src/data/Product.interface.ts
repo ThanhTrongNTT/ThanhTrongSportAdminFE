@@ -1,4 +1,12 @@
-import { Image } from "./Image.interface";
+import { Image, initImage } from "./Image.interface";
+import { Sale } from "./Sale.interface";
+
+export const initColor: Color = {
+    id: "",
+    code: "",
+    displayCode: "",
+    name: "",
+};
 
 export interface Product {
     id?: string;
@@ -11,7 +19,7 @@ export interface Product {
     promoPrice?: number | null;
     gender?: Category | null;
     category?: Category | null;
-    sales?: Sales | null;
+    sales?: Sale | null;
     subImages?: Image[];
 }
 
@@ -31,45 +39,40 @@ export const initProduct: Product = {
 };
 
 export interface ProductItem {
-    id: string;
-    color: Color;
-    size: Size;
-    stock: Stock;
-    mainImage: Image;
-    product: Product;
+    id?: string;
+    color?: Color | null;
+    size?: string;
+    stock?: number;
+    mainImage?: Image | null;
+    product?: Product;
 }
-
+export const initProductItem: ProductItem = {
+    id: "",
+    color: null,
+    size: "",
+    stock: 0,
+    mainImage: initImage,
+    product: initProduct,
+};
 export interface Category {
     id?: string;
     categoryName?: string;
     level?: number;
     locale?: string;
-    parentCategory: Category | null;
+    parentCategory?: Category | null;
 }
 
-export interface Size {
-    code: string;
-    displayCode: string;
-    name: string;
-}
+export const initCategory: Category = {
+    categoryName: "",
+    locale: "",
+    level: 1,
+    parentCategory: null,
+    id: "",
+};
 
 export interface Color {
-    code: string;
-    displayCode: string;
-    name: string;
-}
-
-export interface Stock {
-    statusCode: string;
-    quantity: number;
-}
-
-export interface Sales {
-    id: string;
-    name: string;
-    description: string;
-    code: string;
-    discount: number;
-    startDate: string;
-    endDate: string;
+    id?: string;
+    code?: string;
+    displayCode?: string;
+    name?: string;
 }

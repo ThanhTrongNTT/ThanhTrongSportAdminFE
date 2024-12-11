@@ -10,15 +10,16 @@ import FormGroup from "@/components/common/FormGroup";
 import { IconUser } from "@/components/icon/Icon";
 import Input from "@/components/input/Input";
 import TogglePassword from "@/components/toogle/TogglePassword";
-import { JWTType, User } from "@/data/Interface";
+import { JWTType } from "@/data/Interface";
 import useToggleValue from "@/hooks/useToggleValue";
 import { update, updateToken } from "@/redux/userSlice";
 import AuthAPI from "@/api/auth.api";
 import { useAppDispatch } from "@/redux/store";
+import { User } from "@/data/User.interface";
 
 const schame = Yup.object({
     email: Yup.string()
-        .required("Please enter your emaill address!")
+        .required("Please enter your email address!")
         .matches(
             // eslint-disable-next-line no-control-regex
             /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
@@ -62,7 +63,7 @@ function Login() {
                             const userProfile: User = res.data;
                             dispatch(update(userProfile));
                             navigate("/admin");
-                            toast.success("Login Success!", {
+                            toast.success("Đăng nhập thành công!", {
                                 autoClose: 500,
                                 delay: 10,
                                 draggable: true,
@@ -80,7 +81,7 @@ function Login() {
                             });
                         });
                 } else {
-                    toast.warning(`You don't have permission`, {
+                    toast.warning(`Bạn không có quyền truy cập trang này!`, {
                         autoClose: 500,
                         delay: 10,
                         draggable: true,
@@ -91,13 +92,16 @@ function Login() {
             })
             .catch((err) => {
                 if (err.status === 404) {
-                    toast.error(`User does not esited!`, {
-                        autoClose: 500,
-                        delay: 10,
-                        draggable: true,
-                        pauseOnHover: false,
-                        position: "bottom-right",
-                    });
+                    toast.error(
+                        `Người dùng không có xuất hiện trong hệ thống!`,
+                        {
+                            autoClose: 500,
+                            delay: 10,
+                            draggable: true,
+                            pauseOnHover: false,
+                            position: "bottom-right",
+                        }
+                    );
                 }
             });
     };
@@ -132,7 +136,9 @@ function Login() {
             <div className="flex flex-col items-center m-auto p-5 bg-white rounded-2xl shadow-lg w-[40%]">
                 <IconUser />
                 <Link to={"/admin"}>
-                    <h1 className="text-black text-3xl font-bold">HT Store</h1>
+                    <h1 className="text-black text-3xl font-bold">
+                        Sport Store
+                    </h1>
                 </Link>
                 <form
                     className="text-center w-[70%] mx-auto"

@@ -1,25 +1,157 @@
 import { IconAdd } from "@/components/icon/Icon";
 import { Pagination } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import NewSales from "../new/NewSales";
+import Modal from "@/components/modal/Modal";
+import saleAPI from "@/api/sales.api";
+import { initSaleValue, Sale } from "@/data/Sale.interface";
+import { FieldValues } from "react-hook-form";
+import { toast } from "react-toastify";
+import ModalDelete from "@/components/modal/ModalDelete";
+import DetailSale from "../detail/DetailSale";
 
 const ListSale = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [sales, setSales] = useState<Sale[]>([]);
+    const [isNewModal, setIsNewModal] = useState(false);
+    const [modalUpdate, setModalUpdate] = useState(false);
+    const [modalDelete, setModalDelete] = useState(false);
+    const [idDeleted, setIdDeleted] = useState<string>("");
+    const [saleNew, setSaleNew] = useState<Sale>(initSaleValue);
+    const [sale, setSale] = useState<Sale>(initSaleValue);
+
     const onPageChange = (page: number) => {
         setCurrentPage(page);
     };
-    const onCloseNew = () => {
-        // history.push("/admin/sale/new");
+
+    const getData = (page: number) => {
+        saleAPI
+            .getAllSales(page - 1, 5, "modifiedDate", "")
+            .then((response) => {
+                if (response.result) {
+                    setTotalPage(response.data.totalPages);
+                    setSales(response.data.items);
+                }
+            });
     };
+    const handleCreateNew = (data: FieldValues) => {
+        const saleNew: Sale = {
+            id: "",
+            name: data.name,
+            description: data.description,
+            code: data.code,
+            discount: data.discount,
+            startDate: data.startDate,
+            endDate: data.endDate,
+        };
+        console.log(saleNew);
+
+        saleAPI.createSale(saleNew).then((response) => {
+            if (response.result) {
+                onCloseNew();
+                toast.success("Create Sale success!", {
+                    autoClose: 1000,
+                    pauseOnHover: false,
+                    draggable: true,
+                    delay: 50,
+                });
+                getData(currentPage);
+            }
+        });
+    };
+
+    const onCloseNew = () => {
+        setIsNewModal(!isNewModal);
+    };
+
+    const handleUpdate = (data: FieldValues) => {
+        const dataUpdate: Sale = {
+            id: sale.id,
+            name: data.name,
+            description: data.description,
+            code: data.code,
+            discount: data.discount,
+            startDate: data.startDate,
+            endDate: data.endDate,
+        };
+
+        saleAPI.updateSale(dataUpdate).then((response) => {
+            if (response.result) {
+                onCloseUpdate();
+                toast.success("Update Success!", {
+                    autoClose: 5000,
+                    delay: 50,
+                    draggable: true,
+                    pauseOnHover: false,
+                });
+                getData(currentPage);
+            }
+        });
+    };
+
+    const onClickUpdate = (sale: Sale) => {
+        setSale(sale);
+        setModalUpdate(!modalUpdate);
+    };
+
+    const onCloseUpdate = () => {
+        setModalUpdate(!modalUpdate);
+    };
+
+    const handleDelete = async (id: string) => {
+        setModalDelete(!modalDelete);
+        await saleAPI.deleteSale(id).then((response) => {
+            if (response && response.result) {
+                toast.success("Delete Success!", {
+                    autoClose: 5000,
+                    delay: 50,
+                    draggable: true,
+                    pauseOnHover: false,
+                });
+                getData(currentPage);
+            }
+        });
+    };
+
+    const onCloseDelete = () => {
+        setModalDelete(!modalDelete);
+    };
+
+    useEffect(() => {
+        getData(currentPage);
+    }, [currentPage]);
     return (
         <>
+            <Modal isVisible={isNewModal} onClose={onCloseNew}>
+                <div>
+                    <NewSales
+                        handleCreateNew={handleCreateNew}
+                        sale={saleNew}
+                        setSale={setSaleNew}
+                    />
+                </div>
+            </Modal>
+            <Modal isVisible={modalUpdate} onClose={onCloseUpdate}>
+                <div>
+                    <DetailSale handleUpdate={handleUpdate} sale={sale} />
+                </div>
+            </Modal>
+            <Modal isVisible={modalDelete} onClose={onCloseDelete}>
+                <ModalDelete
+                    id={idDeleted}
+                    handleDelete={handleDelete}
+                    title={"Are you sure to delete this sale?"}
+                    onCloseDelModal={onCloseDelete}
+                />
+            </Modal>
             <div className="">
                 <button
                     className="flex items-center text-black bg-white p-1 mx-8 my-2 rounded-2xl border border-gray-c4"
                     onClick={onCloseNew}
                 >
                     <IconAdd />
-                    <span className="flex items-center mr-2">Add New</span>
+                    <span className="flex items-center mr-2">Thêm mới</span>
                 </button>
             </div>
             <div className="">
@@ -29,13 +161,22 @@ const ListSale = () => {
                             <thead>
                                 <tr>
                                     <th scope="col" className="py-3 px-6">
-                                        Order Id
+                                        Tên
                                     </th>
                                     <th scope="col" className="px-6">
-                                        User Name
+                                        Mã khuyến mãi
                                     </th>
                                     <th scope="col" className="px-6">
-                                        Total Price
+                                        Mô tả
+                                    </th>
+                                    <th scope="col" className="px-6">
+                                        Giảm
+                                    </th>
+                                    <th scope="col" className="px-6">
+                                        Ngày bắt đầu
+                                    </th>
+                                    <th scope="col" className="px-6">
+                                        Ngày kết thúc
                                     </th>
                                     <th
                                         scope="col"
@@ -46,7 +187,7 @@ const ListSale = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {orders.map((order: Order, index) => (
+                                {sales.map((sale: Sale, index) => (
                                     <tr
                                         className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
                                         key={index}
@@ -55,25 +196,37 @@ const ListSale = () => {
                                             scope="row"
                                             className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                         >
-                                            {order.id}
+                                            {sale.name}
                                         </th>
                                         <th
                                             scope="row"
                                             className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                         >
-                                            {order.user?.userName}
+                                            {sale.code}
+                                        </th>
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium text-black "
+                                        >
+                                            {sale.description}
                                         </th>
                                         <th
                                             scope="row"
                                             className="py-4 px-6 font-medium whitespace-nowrap"
                                         >
-                                            {order.totalPrice.toLocaleString(
-                                                "vi",
-                                                {
-                                                    style: "currency",
-                                                    currency: "VND",
-                                                }
-                                            )}
+                                            {sale.discount + " %"}
+                                        </th>
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                        >
+                                            {sale.startDate?.toString()}
+                                        </th>
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                        >
+                                            {sale.endDate?.toString()}
                                         </th>
                                         <th
                                             scope="row"
@@ -82,20 +235,27 @@ const ListSale = () => {
                                             <div className="text-center">
                                                 <span
                                                     className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
-                                                    onClick={() => {}}
+                                                    onClick={() =>
+                                                        onClickUpdate(sale)
+                                                    }
                                                 >
-                                                    View
+                                                    Edit
                                                 </span>
                                                 <span
                                                     className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
-                                                    onClick={() => {}}
+                                                    onClick={() => {
+                                                        setIdDeleted(
+                                                            sale.id ?? ""
+                                                        );
+                                                        onCloseDelete();
+                                                    }}
                                                 >
                                                     Delete
                                                 </span>
                                             </div>
                                         </th>
                                     </tr>
-                                ))} */}
+                                ))}
                             </tbody>
                         </table>
                     </div>

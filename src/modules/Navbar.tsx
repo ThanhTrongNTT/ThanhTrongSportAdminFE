@@ -42,13 +42,13 @@ const Navbar = () => {
                                 <Avt
                                     sx="default"
                                     src={
-                                        userInfo.userProfile.avatar.url ||
+                                        userInfo?.userProfile?.avatar?.url ||
                                         "https://images.unsplash.com/photo-1441123694162-e54a981ceba5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
                                     }
                                 />
                                 <div className="flex items-center">
                                     <p className="text-white">
-                                        {userInfo.userProfile.name}
+                                        {userInfo?.userProfile?.name}
                                     </p>
                                     <Tippy
                                         interactive

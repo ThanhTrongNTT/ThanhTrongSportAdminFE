@@ -62,7 +62,7 @@ const ProductCard = ({
                 <span>
                     Price:{" "}
                     <span className="font-normal">
-                        {product?.priceBase?.toLocaleString("vi-VN") + " VND"}
+                        {product?.basePrice?.toLocaleString("vi-VN") + " VND"}
                     </span>
                 </span>
                 <span>

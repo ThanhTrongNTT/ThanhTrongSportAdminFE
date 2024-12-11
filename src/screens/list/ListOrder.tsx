@@ -1,4 +1,6 @@
-import { Order } from "@/data/Interface";
+import OrderAPI from "@/api/order.api";
+import { Order } from "@/data/Order.interface";
+import { STATUS_OPTIONS } from "@/utils/Constant";
 import { Pagination } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,69 +10,82 @@ const ListOrder = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [isModal, setIsModal] = useState(false);
-    const [isDelete, setIsDelete] = useState(false);
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [modalView, setModalView] = useState(false);
+    const [orderView, setOrderView] = useState<Order | null>(null);
+    const [modalDelete, setModalDelete] = useState(false);
     const [idDelete, setIdDelete] = useState("");
 
-    const orders: Order[] = [
-        {
-            id: "1",
-            totalPrice: 100,
-        },
-    ];
-    // Thực hiện lấy data khi vừa khởi tạo
-    const getData = async (page: number) => {
-        // await tourApi.getTours(page - 1).then((reponse) => {
-        //     setResponse(reponse);
-        //     setTours(reponse.data);
-        // });
-    };
-
-    // Thực hiện show modal xem chi tiết người dùng
-    const onClose = () => {
-        setIsModal(!isModal);
-    };
-
-    // Thực hiện đóng modal
-    const deleteClose = () => {
-        setIsDelete(!isDelete);
-    };
-
-    // Thực hiện chức năng chuyển trang
     const onPageChange = (page: number) => {
-        // tourApi.getTours(page - 1).then((reponse) => {
-        //     setTours(reponse.data);
-        // });
-        // setCurrentPage(page);
+        setCurrentPage(page);
     };
 
-    // Thực hiện chức năng xóa
-    const handleDeleteSuccess = async (id: string) => {
-        // await tourApi.deleteTour(id).then((response) => {
-        //     if (response.status === 200)
-        //         toast.success('Delete Success!', {
-        //             autoClose: 500,
-        //             delay: 50,
-        //             draggable: true,
-        //             pauseOnHover: false,
-        //         });
-        // });
-        getData(currentPage);
+    const getData = async () => {
+        const response = await OrderAPI.getAllOrders(
+            currentPage - 1,
+            5,
+            "modifiedDate",
+            ""
+        );
+        if (response.result) {
+            setOrders(response.data.items);
+            setTotalPages(response.data.totalPages);
+        }
     };
 
-    // Thực hiện chức năng chỉnh sửa
-    const handleEdit = async (id: string) => {
-        navigate(`${id}`);
-        toast.success("Edit View!", {
-            delay: 50,
-            draggable: false,
-            pauseOnHover: false,
+    const onClickView = (order: Order) => {
+        setOrderView(order);
+        setModalView(!modalView);
+    };
+
+    const onCloseView = () => {
+        setModalView(!modalView);
+    };
+    const onCloseDelete = () => {
+        setModalDelete(!modalDelete);
+    };
+
+    const handleDelete = async (id: string) => {
+        await OrderAPI.deleteOrder(id).then((res) => {
+            if (res.result) {
+                toast.success("Delete Success!", {
+                    autoClose: 5000,
+                    delay: 50,
+                    draggable: false,
+                    pauseOnHover: false,
+                });
+            }
         });
+        getData();
     };
 
-    // fetch lại data khi có thay đổi về trang
+    const handleStatusChange = async (orderId: string, newStatus: string) => {
+        try {
+            const response = await OrderAPI.updateOrderStatus(
+                orderId,
+                newStatus
+            );
+            if (response.result) {
+                toast.success("Status updated successfully!", {
+                    autoClose: 1000,
+                    delay: 50,
+                    draggable: false,
+                    pauseOnHover: false,
+                });
+                getData();
+            }
+        } catch (error) {
+            toast.error("Failed to update status!", {
+                autoClose: 1000,
+                delay: 50,
+                draggable: false,
+                pauseOnHover: false,
+            });
+        }
+    };
+
     useEffect(() => {
-        getData(currentPage);
+        getData();
     }, [currentPage]);
 
     return (
@@ -90,6 +105,15 @@ const ListOrder = () => {
                                     <th scope="col" className="px-6">
                                         Total Price
                                     </th>
+                                    <th scope="col" className="px-6">
+                                        Status
+                                    </th>
+                                    <th scope="col" className="px-6">
+                                        Payment Method
+                                    </th>
+                                    <th scope="col" className="px-6">
+                                        Is Paid
+                                    </th>
                                     <th
                                         scope="col"
                                         className="px-6 text-center"
@@ -99,56 +123,106 @@ const ListOrder = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders.map((order: Order, index) => (
-                                    <tr
-                                        className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
-                                        key={index}
-                                    >
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                {orders.map((order: Order, index) => {
+                                    const currentStatus = STATUS_OPTIONS.find(
+                                        (status) =>
+                                            status.value === order.status
+                                    );
+                                    return (
+                                        <tr
+                                            className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
+                                            key={index}
                                         >
-                                            {order.id}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
-                                        >
-                                            {order.user?.userName}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium whitespace-nowrap"
-                                        >
-                                            {order.totalPrice.toLocaleString(
-                                                "vi",
-                                                {
-                                                    style: "currency",
-                                                    currency: "VND",
-                                                }
-                                            )}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
-                                        >
-                                            <div className="text-center">
-                                                <span
-                                                    className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
-                                                    onClick={() => {}}
+                                            <th
+                                                scope="row"
+                                                className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                            >
+                                                {order.id}
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                            >
+                                                {order.user?.userName}
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                className="py-4 px-6 font-medium whitespace-nowrap"
+                                            >
+                                                {order.total?.toLocaleString(
+                                                    "it-IT",
+                                                    {
+                                                        style: "currency",
+                                                        currency: "VND",
+                                                    }
+                                                )}
+                                            </th>
+                                            <th className="py-4 px-6 font-medium whitespace-nowrap">
+                                                <select
+                                                    value={order.status}
+                                                    onChange={(e) =>
+                                                        handleStatusChange(
+                                                            order.id ?? "",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className={`w-auto h-8 py-1 px-2 text-sm rounded-full border-none  text-white ${
+                                                        currentStatus?.color ||
+                                                        "bg-gray-400"
+                                                    }`}
                                                 >
-                                                    View
-                                                </span>
-                                                <span
-                                                    className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
-                                                    onClick={() => {}}
-                                                >
-                                                    Delete
-                                                </span>
-                                            </div>
-                                        </th>
-                                    </tr>
-                                ))}
+                                                    {STATUS_OPTIONS.map(
+                                                        (status) => (
+                                                            <option
+                                                                key={
+                                                                    status.value
+                                                                }
+                                                                value={
+                                                                    status.value
+                                                                }
+                                                            >
+                                                                {status.label}
+                                                            </option>
+                                                        )
+                                                    )}
+                                                </select>
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                className="py-4 px-6 font-medium whitespace-nowrap"
+                                            >
+                                                {order.paymentMethod}
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                className="py-4 px-6 font-medium whitespace-nowrap"
+                                            >
+                                                {order.isPaid
+                                                    ? "Paid"
+                                                    : "Not Paid"}
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                            >
+                                                <div className="text-center">
+                                                    <span
+                                                        className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
+                                                        onClick={() => {}}
+                                                    >
+                                                        Edit
+                                                    </span>
+                                                    <span
+                                                        className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
+                                                        onClick={() => {}}
+                                                    >
+                                                        Delete
+                                                    </span>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

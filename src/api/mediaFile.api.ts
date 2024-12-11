@@ -1,15 +1,16 @@
 import { AxiosResponse } from "axios";
 import AxiosClient from "./axiosClient/AxiosClient";
-import { MediaFile } from "@/data/Interface";
+import { Image } from "@/data/Image.interface";
+import { ApiResponse } from "@/data/payload";
 
 const MediaFileAPI = {
-    upload: (file: File): Promise<AxiosResponse<MediaFile>> => {
+    upload: (file: File): Promise<ApiResponse<Image>> => {
         const url = "/media/upload";
         const formData = new FormData();
         formData.append("file", file);
         return AxiosClient.post(url, formData);
     },
-    uploadFiles: (files: File[]): Promise<AxiosResponse<MediaFile[]>> => {
+    uploadFiles: (files: File[]): Promise<ApiResponse<Image>> => {
         const url = "/media/upload-files";
         const formData = new FormData();
         files.forEach((file) => {

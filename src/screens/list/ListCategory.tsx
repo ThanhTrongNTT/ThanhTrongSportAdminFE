@@ -1,6 +1,5 @@
 import { IconAdd } from "@/components/icon/Icon";
 import Modal from "@/components/modal/Modal";
-import { Category } from "@/data/Interface";
 import { Pagination } from "flowbite-react";
 import { useEffect, useState } from "react";
 import DetailCategory from "../detail/DetailCategory";
@@ -9,6 +8,7 @@ import ModalDelete from "@/components/modal/ModalDelete";
 import CategoryAPI from "@/api/category.api";
 import { toast } from "react-toastify";
 import { FieldValues } from "react-hook-form";
+import { Category } from "@/data/Product.interface";
 
 const ListCategory = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -89,7 +89,7 @@ const ListCategory = () => {
         if (categoryUpdate.id) {
             CategoryAPI.updateCategory(categoryUpdate, categoryUpdate.id).then(
                 (response) => {
-                    if (response.data) {
+                    if (response.result) {
                         onCloseUpdate();
                         toast.success("Update Category success!", {
                             autoClose: 1000,
@@ -153,7 +153,7 @@ const ListCategory = () => {
                 <ModalDelete
                     id={idDeleted}
                     handleDelete={handleDelete}
-                    title={"Are you sure to delete this category?"}
+                    title={"Bạn có thật sự muốn xóa không?"}
                     onCloseDelModal={onCloseDelete}
                 />
             </Modal>
@@ -163,7 +163,7 @@ const ListCategory = () => {
                     onClick={onCloseNew}
                 >
                     <IconAdd />
-                    <span className="flex items-center mr-2">Add New</span>
+                    <span className="flex items-center mr-2">Thêm mới</span>
                 </button>
             </div>
             <div className="p-5">
@@ -172,13 +172,13 @@ const ListCategory = () => {
                         <thead>
                             <tr>
                                 <th scope="col" className="py-3 px-6">
-                                    Category Id
+                                    Id
                                 </th>
                                 <th scope="col" className="px-6">
-                                    Category Name
+                                    Tên
                                 </th>
                                 <th scope="col" className="px-6">
-                                    Category Locale
+                                    Tên hiển thị
                                 </th>
                                 <th scope="col" className="px-6 text-center">
                                     Action
@@ -220,7 +220,7 @@ const ListCategory = () => {
                                                     onClickUpdate(category)
                                                 }
                                             >
-                                                Update
+                                                Edit
                                             </span>
                                             <span
                                                 className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"

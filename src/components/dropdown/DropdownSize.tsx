@@ -1,12 +1,12 @@
 import React from "react";
 import classNames from "@/utils/classNames";
-import { Size } from "@/data/Interface";
 
 type PropTypes = {
     field: any;
     dropdownLabel: string;
-    list: Array<Size>;
+    list: string[];
     className?: string;
+    error: string;
 };
 
 const DropdownSize = ({
@@ -14,32 +14,39 @@ const DropdownSize = ({
     dropdownLabel = "",
     list = [],
     className = "",
+    error,
 }: PropTypes) => {
     const { value, onChange } = field;
 
     return (
-        <select
-            value={value?.id || ""}
-            onChange={(e) => {
-                const selectedSize = list.find(
-                    (size) => size.id === e.target.value
-                );
-                onChange(selectedSize);
-            }}
-            className={classNames(
-                "px-5 py-3 rounded-md border border-c6 text-lg",
-                className
-            )}
-        >
-            <option value="" disabled>
-                {dropdownLabel}
-            </option>
-            {list.map((item, index) => (
-                <option value={item.id} key={index}>
-                    {item.name}
+        <>
+            <select
+                value={value || ""}
+                onChange={(e) => {
+                    console.log(e.target.value);
+
+                    const size = e.target.value;
+                    onChange(size);
+                }}
+                className={classNames(
+                    "px-5 py-3 w-full rounded-md border border-c6 text-lg",
+                    className,
+                    error.length > 0
+                        ? "border-red-700"
+                        : "border-gray-c3 text-black"
+                )}
+            >
+                <option value="" disabled>
+                    {dropdownLabel}
                 </option>
-            ))}
-        </select>
+                {list.map((item, index) => (
+                    <option value={item} key={index}>
+                        {item}
+                    </option>
+                ))}
+            </select>
+            {error && <span className="text-red-700">{error}</span>}
+        </>
     );
 };
 

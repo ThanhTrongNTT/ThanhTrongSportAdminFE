@@ -1,4 +1,4 @@
-import { Product } from "@/data/Product.interface";
+import { Product, ProductItem } from "@/data/Product.interface";
 import AxiosClient from "./axiosClient/AxiosClient";
 import { AxiosResponse } from "axios";
 import { PageResponse, SearchParams } from "@/data/Interface";
@@ -47,17 +47,46 @@ const ProductAPI = {
         const url = `product`;
         return AxiosClient.post(url, product);
     },
-    updateProduct: (product: Product, id: string) => {
+    updateProduct: (
+        product: Product,
+        id: string
+    ): Promise<ApiResponse<Product>> => {
         const url = `product/${id}`;
         return AxiosClient.put(url, product);
     },
-    deleteProduct: (id: string): Promise<ApiResponse> => {
+    deleteProduct: (id: string): Promise<ApiResponse<Product>> => {
         const url = `product/${id}`;
         return AxiosClient.delete(url);
     },
-    getProductBySlug: (slug: string): Promise<AxiosResponse<Product>> => {
-        const url = `product/slug/${slug}`;
+    getProductBySlug: (slug: string): Promise<ApiResponse<Product>> => {
+        const url = `products/slug/${slug}`;
         return AxiosClient.get(url);
+    },
+    getProductItem: (
+        id: string,
+        pageNo: number,
+        pageSize: number,
+        sortBy: string,
+        sortDir: string
+    ): Promise<PageResponse<ProductItem>> => {
+        const url = `product/items/${id}?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
+        return AxiosClient.get(url);
+    },
+    createProductItem: (
+        data: ProductItem
+    ): Promise<ApiResponse<ProductItem>> => {
+        const url = `product/item/${data.product?.id}`;
+        return AxiosClient.post(url, data);
+    },
+    updateProductItem: (
+        data: ProductItem
+    ): Promise<ApiResponse<ProductItem>> => {
+        const url = `product/item/${data.id}`;
+        return AxiosClient.put(url, data);
+    },
+    deleteProductItem: (id: string): Promise<ApiResponse<ProductItem>> => {
+        const url = `product/item/${id}`;
+        return AxiosClient.delete(url);
     },
 };
 export default ProductAPI;

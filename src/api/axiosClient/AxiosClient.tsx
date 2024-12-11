@@ -1,11 +1,13 @@
 // api/axiosClient.js
+import { ApiResponse } from "@/data/payload";
 import useLoadingStore from "@/redux/store/loadingStore";
+import { MessageErrorSystem } from "@/utils/Message";
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { toast } from "react-toastify";
 // Set up default config for http requests here
 
 // Please have a look at here `https://github.com/axios/axios#request-config` for the full list of configs
-const baseUrl = import.meta.env.VITE_API_URL;
+const baseUrl = "https://thanhtrongsport-be-production.up.railway.app/api/v1/";
 const AxiosClient = axios.create({
     baseURL: baseUrl,
     headers: {
@@ -25,29 +27,44 @@ AxiosClient.interceptors.response.use(
         return response?.data || response;
     },
     async (error) => {
+        const errorResponse: ApiResponse<null> = {
+            result: error.result,
+            code: error.response?.status || 500,
+            message: "",
+            data: null,
+        };
         if (error.code === "ERR_NETWORK") {
-            toast.error(error.message, {
-                autoClose: 500,
-                draggable: true,
-                pauseOnHover: true,
-                position: "bottom-right",
-            });
+            // toast.error(MessageErrorSystem, {
+            //     autoClose: 5000,
+            //     draggable: true,
+            //     pauseOnHover: true,
+            //     position: "bottom-right",
+            // });
+            errorResponse.message = MessageErrorSystem;
         } else if (!error.response.data) {
-            toast.error(error.message, {
-                autoClose: 500,
-                draggable: true,
-                pauseOnHover: false,
-                position: "bottom-right",
-            });
+            // toast.error(error.message, {
+            //     autoClose: 5000,
+            //     draggable: true,
+            //     pauseOnHover: false,
+            //     position: "bottom-right",
+            // });
+            errorResponse.message = error.message;
         } else {
-            toast.error(error.response.data.message, {
-                autoClose: 500,
-                delay: 10,
-                draggable: true,
-                pauseOnHover: false,
-                position: "bottom-right",
-            });
+            // toast.error(error.response.data.message, {
+            //     autoClose: 5000,
+            //     delay: 10,
+            //     draggable: true,
+            //     pauseOnHover: false,
+            //     position: "bottom-right",
+            // });
+            errorResponse.message = error.response.data.message;
         }
+        toast.error(errorResponse.message, {
+            autoClose: 5000,
+            draggable: true,
+            pauseOnHover: false,
+            position: "bottom-right",
+        });
         const { status } = error.response || {};
         const prevRequest = error.config;
         const refreshToken = await sessionStorage.getItem("refreshToken");

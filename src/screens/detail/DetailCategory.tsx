@@ -8,31 +8,23 @@ import { Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import * as Yup from "yup";
 import NewCategory from "../new/NewCategory";
+import { categorySchema } from "@/utils/schema.resolver";
 
 type DetailCategoryProps = {
     // Props here
     category: Category;
     handleUpdate: (data: FieldValues) => void;
 };
-
-const schema = Yup.object({
-    categoryName: Yup.string().required("Please enter your Category name!"),
-    locale: Yup.string().required("Please enter your Locale!"),
-    level: Yup.number().required("Please enter your Level!"),
-    parentCategory: Yup.object().notRequired(),
-});
 const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
     const {
         handleSubmit,
         control,
         setValue,
-        getValues,
         formState: { errors },
         watch,
-    } = useForm({
-        resolver: yupResolver(schema),
+    } = useForm<Category>({
+        resolver: yupResolver(categorySchema),
         mode: "onSubmit",
     });
     const [modalNew, setModalNew] = useState(false);
@@ -59,6 +51,35 @@ const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
         CategoryAPI.addCategory(data).then((response) => {
             if (response.data) {
                 toast.success("Create Category success!", {
+                    autoClose: 1000,
+                    pauseOnHover: false,
+                    draggable: true,
+                    delay: 50,
+                });
+                fetchChildCategory();
+            }
+        });
+    };
+
+    const handleUpdateCategory = (data: Category) => {
+        if (!data.id) return;
+        CategoryAPI.updateCategory(data, data.id).then((response) => {
+            if (response.data) {
+                toast.success("Update Category success!", {
+                    autoClose: 1000,
+                    pauseOnHover: false,
+                    draggable: true,
+                    delay: 50,
+                });
+                fetchChildCategory();
+            }
+        });
+    };
+
+    const handleDeleteCategory = (id: string) => {
+        CategoryAPI.deleteCategory(id).then((response) => {
+            if (response.result) {
+                toast.success("Delete Category success!", {
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -98,27 +119,47 @@ const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
             <div className="bg-white mt-10 rounded-md px-10 pt-10 pb-5">
                 {/* <form onSubmit={handleSubmit(onSubmit)}> */}
                 <form onSubmit={handleSubmit(submit)}>
-                    <h1 className="font-bold text-lg">Category Infomation</h1>
+                    <h1 className="font-bold text-center text-2xl">
+                        Thông tin danh mục
+                    </h1>
                     <div className="text-right mt-10">
                         <div className="grid grid-cols-2 gap-10">
-                            <Field
-                                control={control}
-                                name="categoryName"
-                                id="category-name"
-                                placeholder="Enter Category name..."
-                                error={errors.categoryName?.message ?? ""}
-                            >
-                                Category Name
-                            </Field>
-                            <Field
-                                control={control}
-                                name="locale"
-                                id="category-locale"
-                                placeholder="Enter Description..."
-                                error={errors.locale?.message ?? ""}
-                            >
-                                Locale
-                            </Field>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Tên{" "}
+                                    <span className="text-red-500">(*)</span>
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="categoryName"
+                                    id="category-name"
+                                    placeholder="Nhập tên..."
+                                    error={errors.categoryName?.message ?? ""}
+                                >
+                                    Tên
+                                </Field>
+                            </div>
+                            <div className="text-left">
+                                <label
+                                    htmlFor=""
+                                    className="text-lg font-semibold text-left"
+                                >
+                                    Tên hiển thị
+                                </label>
+                                <Field
+                                    control={control}
+                                    name="locale"
+                                    id="category-locale"
+                                    placeholder="Enter Description..."
+                                    error={errors.locale?.message ?? ""}
+                                >
+                                    Tên hiển thị{" "}
+                                    <span className="text-red-500">(*)</span>
+                                </Field>
+                            </div>
                         </div>
                         <button
                             type="submit"
@@ -130,7 +171,7 @@ const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
                             )}
                             disabled={disable()}
                         >
-                            Update Category
+                            Cập nhật
                         </button>
                     </div>
                 </form>
@@ -140,6 +181,8 @@ const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
                         categories={children}
                         parentCategory={category}
                         handleCreateNewCategory={handleCreateNewCategory}
+                        handleUpdateCategory={handleUpdateCategory}
+                        handleDeleteCategory={handleDeleteCategory}
                     />
                 </div>
             </div>

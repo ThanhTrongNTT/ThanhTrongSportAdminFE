@@ -1,9 +1,15 @@
-import { ChangePasswordRequest, SearchParams, User } from "@/data/Interface";
+import {
+    ChangePasswordRequest,
+    PageResponse,
+    SearchParams,
+} from "@/data/Interface";
 import { AxiosResponse } from "axios";
 import AxiosClient from "./axiosClient/AxiosClient";
+import { ApiResponse } from "@/data/payload";
+import { User } from "@/data/User.interface";
 
 const userApi = {
-    getMe: (email: string): Promise<AxiosResponse<User>> => {
+    getMe: (email: string): Promise<ApiResponse<User>> => {
         const url = `user/${email}`;
         return AxiosClient.get(url);
     },
@@ -12,7 +18,7 @@ const userApi = {
         pageSize: number,
         sortBy: string,
         sortDir: string
-    ) => {
+    ): Promise<PageResponse<User>> => {
         const url = `users?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`;
         return AxiosClient.get(url);
     },
@@ -24,8 +30,8 @@ const userApi = {
         const url = `user/${email}`;
         return AxiosClient.put(url, user);
     },
-    deleteUser: (id: string) => {
-        const url = `user/${id}`;
+    deleteUser: (id: string, userId: string): Promise<ApiResponse<boolean>> => {
+        const url = `user/${id}?userId=${userId}`;
         return AxiosClient.delete(url);
     },
     searchUser: (searchParam: SearchParams) => {

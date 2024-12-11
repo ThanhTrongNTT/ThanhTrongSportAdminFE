@@ -1,75 +1,80 @@
-import couponAPI from "@/api/coupon.api";
+import colorAPI from "@/api/color.api";
 import { IconAdd } from "@/components/icon/Icon";
 import Modal from "@/components/modal/Modal";
-import { Coupon, initCouponValue } from "@/data/Coupon.interface";
+import { Color, initColor } from "@/data/Product.interface";
+import classNames from "@/utils/classNames";
 import { Pagination } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { HexColorPicker } from "react-colorful";
 import { FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
-import NewCoupon from "../new/NewCoupon";
-import DetailCoupon from "../detail/DetailCoupon";
+import NewColor from "../new/NewColor";
+import DetailColor from "../detail/DetailColor";
 import ModalDelete from "@/components/modal/ModalDelete";
 
-const ListCoupon = () => {
+const ListColor = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
-    const [coupons, setCoupons] = useState<Coupon[]>([]);
-    const [isNewModal, setIsNewModal] = useState(false);
-    const [modalUpdate, setModalUpdate] = useState(false);
+    const [colors, setColors] = useState<Color[]>([]);
+    const [modalNew, setModalNew] = useState(false);
+    const [colorNew, setColorNew] = useState<Color>(initColor);
+    const [modalEdit, setModalEdit] = useState(false);
+    const [color, setColor] = useState<Color>(initColor);
     const [modalDelete, setModalDelete] = useState(false);
-    const [idDeleted, setIdDeleted] = useState<string>("");
-    const [couponNew, setCouponNew] = useState<Coupon>(initCouponValue);
-    const [coupon, setCoupon] = useState<Coupon>(initCouponValue);
+    const [idDelete, setIdDelete] = useState<string>("");
+
     const onPageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    const getData = (page: number) => {
-        couponAPI
-            .getAllCoupon(page - 1, 5, "modifiedDate", "")
-            .then((response) => {
-                if (response) {
-                    setTotalPage(response.data.totalPages);
-                    setCoupons(response.data.items);
-                }
-            });
+    const getData = async () => {
+        const response = await colorAPI.getAllColors(
+            currentPage - 1,
+            5,
+            "modifiedDate",
+            ""
+        );
+        if (response.result) {
+            setColors(response.data.items);
+            setTotalPage(response.data.totalPages);
+        }
     };
+
+    const onCloseNew = () => {
+        setModalNew(!modalNew);
+    };
+
     const handleCreateNew = (data: FieldValues) => {
-        const newCoupon: Coupon = {
+        const colorNew: Color = {
+            id: "",
+            name: data.name,
             code: data.code,
-            description: data.description,
-            discount: data.discount,
-            startDate: data.startDate,
-            endDate: data.endDate,
+            displayCode: data.displayCode,
         };
-        couponAPI.createCoupon(newCoupon).then((response) => {
+
+        colorAPI.createColor(colorNew).then((response) => {
             if (response.result) {
                 onCloseNew();
-                toast.success("Create Sale success!", {
+                toast.success("Create success!", {
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
                     delay: 50,
                 });
-                getData(currentPage);
+                getData();
             }
         });
     };
-    const onCloseNew = () => {
-        setIsNewModal(!isNewModal);
-    };
 
     const handleUpdate = (data: FieldValues) => {
-        const updateCoupon: Coupon = {
-            id: coupon.id,
-            description: data.description,
+        const dataUpdate: Color = {
+            id: color.id,
+            name: data.name,
             code: data.code,
-            discount: data.discount,
-            startDate: data.startDate,
-            endDate: data.endDate,
+            displayCode: data.displayCode,
         };
 
-        couponAPI.updateCoupon(updateCoupon).then((response) => {
+        colorAPI.updateColor(dataUpdate).then((response) => {
             if (response.result) {
                 onCloseUpdate();
                 toast.success("Update Success!", {
@@ -78,23 +83,23 @@ const ListCoupon = () => {
                     draggable: true,
                     pauseOnHover: false,
                 });
-                getData(currentPage);
+                getData();
             }
         });
     };
 
-    const onClickUpdate = (coupon: Coupon) => {
-        setCoupon(coupon);
-        setModalUpdate(!modalUpdate);
+    const onClickUpdate = (color: Color) => {
+        setColor(color);
+        setModalEdit(!modalEdit);
     };
 
     const onCloseUpdate = () => {
-        setModalUpdate(!modalUpdate);
+        setModalEdit(!modalEdit);
     };
 
     const handleDelete = async (id: string) => {
         setModalDelete(!modalDelete);
-        await couponAPI.deleteCoupon(id).then((response) => {
+        await colorAPI.deleteColor(id).then((response) => {
             if (response && response.result) {
                 toast.success("Delete Success!", {
                     autoClose: 5000,
@@ -102,7 +107,7 @@ const ListCoupon = () => {
                     draggable: true,
                     pauseOnHover: false,
                 });
-                getData(currentPage);
+                getData();
             }
         });
     };
@@ -112,29 +117,30 @@ const ListCoupon = () => {
     };
 
     useEffect(() => {
-        getData(currentPage);
+        getData();
     }, [currentPage]);
+
     return (
         <>
-            <Modal isVisible={isNewModal} onClose={onCloseNew}>
+            <Modal isVisible={modalNew} onClose={onCloseNew}>
                 <div>
-                    <NewCoupon
+                    <NewColor
                         handleCreateNew={handleCreateNew}
-                        coupon={couponNew}
-                        setCoupon={setCouponNew}
+                        color={colorNew}
+                        setColor={setColorNew}
                     />
                 </div>
             </Modal>
-            <Modal isVisible={modalUpdate} onClose={onCloseUpdate}>
+            <Modal isVisible={modalEdit} onClose={onCloseUpdate}>
                 <div>
-                    <DetailCoupon handleUpdate={handleUpdate} coupon={coupon} />
+                    <DetailColor handleUpdate={handleUpdate} color={color} />
                 </div>
             </Modal>
             <Modal isVisible={modalDelete} onClose={onCloseDelete}>
                 <ModalDelete
-                    id={idDeleted}
+                    id={idDelete}
                     handleDelete={handleDelete}
-                    title={"Are you sure to delete this coupon?"}
+                    title={"Are you sure to delete this color?"}
                     onCloseDelModal={onCloseDelete}
                 />
             </Modal>
@@ -154,19 +160,13 @@ const ListCoupon = () => {
                             <thead>
                                 <tr>
                                     <th scope="col" className="py-3 px-6">
-                                        Mã giảm giá
+                                        Tên màu
                                     </th>
                                     <th scope="col" className="px-6">
-                                        Mô tả
+                                        Mã màu
                                     </th>
                                     <th scope="col" className="px-6">
-                                        Giảm giá
-                                    </th>
-                                    <th scope="col" className="px-6">
-                                        Ngày bắt đầu
-                                    </th>
-                                    <th scope="col" className="px-6">
-                                        Ngày kết thúc
+                                        Mã hiển thị
                                     </th>
                                     <th
                                         scope="col"
@@ -177,7 +177,7 @@ const ListCoupon = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {coupons.map((coupon: Coupon, index) => (
+                                {colors.map((color: Color, index) => (
                                     <tr
                                         className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
                                         key={index}
@@ -186,31 +186,20 @@ const ListCoupon = () => {
                                             scope="row"
                                             className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                         >
-                                            {coupon.code}
+                                            {color.name}
+                                        </th>
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-bold text-black whitespace-nowrap"
+                                            style={{ color: color.code }}
+                                        >
+                                            {color.code?.toUpperCase()}
                                         </th>
                                         <th
                                             scope="row"
                                             className="py-4 px-6 font-medium text-black "
                                         >
-                                            {coupon.description}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium whitespace-nowrap"
-                                        >
-                                            {coupon.discount + " %"}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
-                                        >
-                                            {coupon.startDate?.toString()}
-                                        </th>
-                                        <th
-                                            scope="row"
-                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
-                                        >
-                                            {coupon.endDate?.toString()}
+                                            {color.displayCode}
                                         </th>
                                         <th
                                             scope="row"
@@ -219,17 +208,17 @@ const ListCoupon = () => {
                                             <div className="text-center">
                                                 <span
                                                     className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
-                                                    onClick={() =>
-                                                        onClickUpdate(coupon)
-                                                    }
+                                                    onClick={() => {
+                                                        onClickUpdate(color);
+                                                    }}
                                                 >
                                                     Edit
                                                 </span>
                                                 <span
                                                     className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
                                                     onClick={() => {
-                                                        setIdDeleted(
-                                                            coupon.id ?? ""
+                                                        setIdDelete(
+                                                            color.id ?? ""
                                                         );
                                                         onCloseDelete();
                                                     }}
@@ -258,4 +247,4 @@ const ListCoupon = () => {
     );
 };
 
-export default ListCoupon;
+export default ListColor;

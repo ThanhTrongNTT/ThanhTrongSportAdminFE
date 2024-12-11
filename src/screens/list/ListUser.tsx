@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import userApi from "@/api/user.api";
 import UserCard from "@/components/itemCard/userCard/UserCard";
-import { User } from "@/data/Interface";
 import Modal from "@/components/modal/Modal";
 import ModalDelete from "@/components/modal/ModalDelete";
+import { User } from "@/data/User.interface";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const List = () => {
+    const { userInfo } = useSelector((state: RootState) => state.user);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [isDelModal, setIsDelModal] = useState(false);
@@ -16,7 +19,7 @@ const List = () => {
 
     const getData = async (page: number) => {
         await userApi.getUsers(page - 1, 5, "id", "asc").then((response) => {
-            setUsers(response.data.content);
+            setUsers(response.data.items);
             setTotalPages(response.data.totalPages);
         });
     };
@@ -31,9 +34,9 @@ const List = () => {
     const handleDelete = async (id: string) => {
         setIsDelModal(!isDelModal);
         // Delete User
-        await userApi.deleteUser(id).then((response) => {
-            if (response.status === 200)
-                toast.success("Delete Success!", {
+        await userApi.deleteUser(id, userInfo?.id || "").then((response) => {
+            if (response.result)
+                toast.success("Xóa thành công!", {
                     autoClose: 500,
                     delay: 50,
                     draggable: true,
@@ -77,7 +80,7 @@ const List = () => {
                 <ModalDelete
                     id={idDelete}
                     handleDelete={handleDelete}
-                    title="Are you sure you want to delete this user?"
+                    title="Bạn có chắc là muốn xóa người dùng này?"
                     onCloseDelModal={onCloseDelModal}
                 />
             </Modal>
@@ -87,7 +90,7 @@ const List = () => {
                         <UserCard
                             key={user.id}
                             user={user}
-                            id={user.id}
+                            id={user.id || ""}
                             setIdDelete={setIdDelete}
                             onCloseDel={onCloseDelModal}
                             handleActive={handleActive}

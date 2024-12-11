@@ -1,4 +1,4 @@
-import { User } from "@/data/Interface";
+import { User } from "@/data/User.interface";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserState {
@@ -28,7 +28,6 @@ const initialState: UserState = {
                 fileName: "",
                 fileType: "",
                 url: "",
-                removalFlag: false,
             },
             removalFlag: false,
         },

@@ -16,18 +16,17 @@ const ProfilePage = lazy(() => import("@/screens/profile/ProfilePage"));
 const ListSale = lazy(() => import("@/screens/list/ListSale"));
 const ListCoupon = lazy(() => import("@/screens/list/ListCoupon"));
 const ListProductItem = lazy(() => import("@/screens/list/ListProductItem"));
+const ListColor = lazy(() => import("@/screens/list/ListColor"));
 
 const DeclareRouter = () => {
-    const loading = useLoadingStore((state) => state.loading);
     return (
         <div className="bg-gradient-to-t from-orange-400 via-red-500 to-pink-500">
             {/* <div className="bg-banner-login bg-cover bg-fixed"> */}
-            {loading && <Loading />}
             <Routes>
                 <Route path="/" element={<Navigate to="/admin" />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="login" element={<Login />} />
                 <Route path="profile" element={<ProfilePage />} />
-                <Route path="/admin" element={<PrivateRoute />}>
+                <Route path="admin" element={<PrivateRoute />}>
                     <Route element={<LayoutDefault />}>
                         <Route path="" element={<Home />} />
                         <Route path="user">
@@ -50,6 +49,9 @@ const DeclareRouter = () => {
                         </Route>
                         <Route path="coupon">
                             <Route index element={<ListCoupon />} />
+                        </Route>
+                        <Route path="color">
+                            <Route index element={<ListColor />} />
                         </Route>
                     </Route>
                 </Route>

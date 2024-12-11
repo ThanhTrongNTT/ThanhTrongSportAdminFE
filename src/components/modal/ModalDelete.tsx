@@ -26,14 +26,14 @@ const ModalDelete = ({
                         onCloseDelModal;
                     }}
                 >
-                    Yes, I'm sure
+                    Vâng, tôi chắc chắn
                 </button>
                 <button
                     className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full"
                     color="gray"
                     onClick={onCloseDelModal}
                 >
-                    No, cancel
+                    Không, hủy bỏ
                 </button>
             </div>
         </div>

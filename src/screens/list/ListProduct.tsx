@@ -11,11 +11,15 @@ import DetailProduct from "../detail/DetailProduct";
 import NewProduct from "../new/NewProduct";
 import { Category, initProduct, Product } from "@/data/Product.interface";
 import ProductTable from "@/components/table/ProductTable";
+import { Sale } from "@/data/Sale.interface";
+import saleAPI from "@/api/sales.api";
+import { FieldValues } from "react-hook-form";
 
 const ListProduct = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [genders, setGenders] = useState<Category[]>([]);
+    const [sales, setSales] = useState<Sale[]>([]);
     const [isNewModal, setIsNewModal] = useState(false);
     const [modalUpdate, setModalUpdate] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
@@ -24,15 +28,12 @@ const ListProduct = () => {
     const [productEdit, setProductEdit] = useState<Product>(initProduct);
     // Fetch data ngay khi vào trang
     const getData = async (page: number) => {
-        await ProductAPI.getAllProducts(
-            page - 1,
-            10,
-            "productName",
-            "asc"
-        ).then((response) => {
-            setProducts(response.data.content);
-            setTotalPages(response.data.totalPages);
-        });
+        await ProductAPI.getAllProducts(page - 1, 5, "productName", "asc").then(
+            (response) => {
+                setProducts(response.data.items);
+                setTotalPages(response.data.totalPages);
+            }
+        );
     };
 
     const onCloseNew = () => {
@@ -62,7 +63,8 @@ const ListProduct = () => {
         setModalUpdate(!modalUpdate);
     };
 
-    const handleUpdate = (productUpdate: Product) => {
+    const handleUpdate = (data: FieldValues) => {
+        const productUpdate = { ...data, id: productEdit.id };
         if (productEdit.id)
             ProductAPI.updateProduct(productUpdate, productEdit.id).then(
                 (response) => {
@@ -113,6 +115,9 @@ const ListProduct = () => {
             CategoryAPI.getCategoriesListByLevel(1).then((response) => {
                 setGenders(response.data);
             });
+            saleAPI.getListSales().then((response) => {
+                setSales(response.data);
+            });
         };
         getDropDown();
     }, []);
@@ -124,6 +129,7 @@ const ListProduct = () => {
                     <NewProduct
                         handleCreateNew={handleCreateNew}
                         genders={genders}
+                        sales={sales}
                     />
                 </div>
             </Modal>
@@ -134,6 +140,7 @@ const ListProduct = () => {
                         product={productEdit}
                         handleUpdate={handleUpdate}
                         genders={genders}
+                        sales={sales}
                     />
                 </div>
             </Modal>
@@ -153,7 +160,7 @@ const ListProduct = () => {
                     }}
                 >
                     <IconAdd />
-                    <span className="flex items-center mr-2">Add New</span>
+                    <span className="flex items-center mr-2">Thêm mới</span>
                 </button>
             </div>
             <div className="p-5">
