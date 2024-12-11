@@ -64,7 +64,7 @@ const ListProductItem = () => {
             color: data.color,
             size: data.size,
             stock: data.stock,
-            mainImage: null,
+            mainImage: data.mainImage,
             product: product,
         };
         ProductAPI.createProductItem(itemNew).then((response) => {
@@ -89,7 +89,7 @@ const ListProductItem = () => {
             color: data.color,
             size: data.size,
             stock: data.stock,
-            mainImage: null,
+            mainImage: data.mainImage,
             product: product,
         };
         ProductAPI.updateProductItem(itemUpdate).then((response) => {
@@ -320,6 +320,7 @@ const ListProductItem = () => {
                                                 bordered
                                                 size="lg"
                                                 img={
+                                                    item.mainImage?.url ??
                                                     "https://hd-book-store.vercel.app/images/db_bg.jpeg"
                                                 }
                                             />

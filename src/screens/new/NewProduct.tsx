@@ -36,7 +36,7 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
     });
 
     const [images, setImages] = useState<Array<File>>([]);
-    const [disable, setDisable] = useState<boolean>(true);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
     const [mediaFiles, setMediaFiles] = useState<Image[]>([]);
 
     const formValues = watch();
@@ -59,68 +59,46 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
             for (let i = 0; i < e.target.files.length; i++) {
                 const newImage = e.target.files[i];
                 setImages((images) => [...images, newImage]);
-                const file = {
-                    id: "",
-                    fileName: newImage.name,
-                    fileType: newImage.type,
-                    url: "",
-                };
-                setMediaFiles((mediaFiles) => [...mediaFiles, file]);
             }
         }
     };
 
-    const onSubmit = (data: FieldValues) => {
+    const onSubmit = async (data: FieldValues) => {
+        if (images.length > 0) {
+            await uploadFiles();
+        }
         console.log("data", data);
-        setDisable(false);
-        // const product: Product = {
-        //     productName: data.productName,
-        //     freeInformation: data.freeInformation,
-        //     longDescription: data.washingInformation,
-        //     washingInformation: data.washingInformation,
-        //     slug: data.slug,
-        //     price: data.price,
-        //     gender: data.gender,
-        //     category: data.category,
-        //     subImages: mediaFiles,
-        // };
-        // handleCreateNew(product);
-        // resetValues();
-        setTimeout(() => {
-            setDisable(true);
-            handleCreateNew(data);
-        }, 5000);
+        const product = { ...data, subImages: mediaFiles };
+        handleCreateNew(product);
     };
     const uploadFiles = async () => {
-        setDisable(false);
-        // if (images.length === 0) {
-        //     toast.error("Please choose your images", {
-        //         autoClose: 1000,
-        //         pauseOnHover: false,
-        //         draggable: true,
-        //         delay: 50,
-        //     });
-        //     setDisable(true);
-        //     return;
-        // }
-        // await MediaFileAPI.uploadFiles(images).then((response) => {
-        //     if (response.data) {
-        //         setImages([]);
-        //         toast.success("Upload success", {
-        //             autoClose: 1000,
-        //             pauseOnHover: false,
-        //             draggable: true,
-        //             delay: 50,
-        //         });
-        //         setDisable(true);
-        //         setMediaFiles(response.data);
-        //     }
-        //     setDisable(true);
-        // });
-        setTimeout(() => {
-            setDisable(true);
-            setImages([]);
-        }, 5000);
+        if (images.length === 0) return;
+
+        setIsUploading(true);
+        await MediaFileAPI.uploadFiles(images)
+            .then((response) => {
+                if (response.result) {
+                    setImages([]); // Xóa tệp trong trạng thái sau khi tải lên
+                    setMediaFiles(response.data); // Cập nhật đường dẫn tệp đã tải
+                    toast.success("Upload successful!", {
+                        autoClose: 1000,
+                        pauseOnHover: true,
+                        draggable: true,
+                        delay: 50,
+                    });
+                }
+            })
+            .catch((error) => {
+                toast.error("Upload failed", {
+                    autoClose: 1000,
+                    pauseOnHover: false,
+                    draggable: true,
+                    delay: 50,
+                });
+            })
+            .finally(() => {
+                setIsUploading(false);
+            });
     };
 
     const resetValues = () => {
@@ -419,24 +397,32 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
                                     onChange={handleChange}
                                     className="w-full text-gray-500 font-medium text-sm bg-gray-100 file:cursor-pointer cursor-pointer file:h-full file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-gray-800 file:hover:bg-gray-700 file:text-white rounded"
                                 />
-                                {/* <button
+                                <button
                                     type="button"
                                     onClick={uploadFiles}
                                     className={classNames(
                                         "ml-4 h-12 w-[130px] rounded-md text-white font-semibold",
                                         images.length === 0
                                             ? "cursor-no-drop bg-gradient-to-br from-orange-200 to-pink-200"
-                                            : disable
-                                              ? "bg-gradient-to-br from-orange-500 to-pink-500"
-                                              : "cursor-wait bg-gradient-to-br from-orange-500 to-pink-500"
+                                            : isUploading
+                                              ? "cursor-wait bg-gradient-to-br from-gray-400 to-gray-500"
+                                              : "bg-gradient-to-br from-orange-500 to-pink-500"
                                     )}
-                                    disabled={images.length === 0}
+                                    disabled={
+                                        images.length === 0 || isUploading
+                                    }
                                 >
-                                    
-                                </button> */}
+                                    {isUploading ? (
+                                        <div className="flex items-center justify-center">
+                                            <div className="w-7 h-7 bg-transparent border-[3px] border-t-[3px] border-t-transparent animate-spin border-white rounded-full"></div>
+                                        </div>
+                                    ) : (
+                                        "Upload"
+                                    )}
+                                </button>
                             </div>
                         </div>
-                        <button
+                        {/* <button
                             type="submit"
                             className={
                                 (classNames(
@@ -448,28 +434,18 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
                                       ? "bg-gradient-to-br from-orange-500 to-pink-500"
                                       : "cursor-wait bg-gradient-to-br from-orange-500 to-pink-500")
                             }
-                        ></button>
+                        ></button> */}
                         <button
                             type="submit"
                             className={classNames(
                                 "mt-4 ml-4 h-12 w-[130px] rounded-md text-white font-semibold",
                                 disableAdd()
-                                    ? "cursor-no-drop bg-gradient-to-br from-orange-200 to-pink-200"
-                                    : disable
-                                      ? "bg-gradient-to-br from-orange-500 to-pink-500"
-                                      : "cursor-wait bg-gradient-to-br from-orange-500 to-pink-500"
+                                    ? "cursor-no-drop bg-gray-300"
+                                    : "bg-gradient-to-br from-orange-500 to-pink-500"
                             )}
                             disabled={disableAdd()}
                         >
-                            {disableAdd() ? (
-                                "Thêm mới"
-                            ) : disable ? (
-                                "Thêm mới"
-                            ) : (
-                                <div className="flex items-center justify-center">
-                                    <div className="w-7 h-7 bg-transparent border-[3px] border-t-[3px] border-t-transparent animate-spin border-white rounded-full"></div>
-                                </div>
-                            )}
+                            {disableAdd() ? "Thêm mới" : "Thêm mới"}
                         </button>
                     </div>
                 </form>
