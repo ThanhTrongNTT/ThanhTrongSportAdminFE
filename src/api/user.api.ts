@@ -54,5 +54,9 @@ const userApi = {
         const url = `user/deactive/${user.email}`;
         return await AxiosClient.post(url);
     },
+    getInformationAdmin: async (): Promise<ApiResponse<any>> => {
+        const url = `user/information`;
+        return await AxiosClient.get(url);
+    },
 };
 export default userApi;

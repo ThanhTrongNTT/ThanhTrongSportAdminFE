@@ -190,7 +190,7 @@ const ListProductItem = () => {
             {/* Show Product Information */}
             <div className="flex flex-col items-centers bg-white p-5 m-10 rounded-2xl">
                 <div className="flex items-center justify-center p-5">
-                    <h1 className="text-3xl font-bold">Product Information</h1>
+                    <h1 className="text-3xl font-bold">{product.productName}</h1>
                 </div>
                 <div className="w-1/2 mx-auto">
                     <Swiper
@@ -247,25 +247,41 @@ const ListProductItem = () => {
                         )}
                     </Swiper>
                 </div>
-                <div className=" text-left">
+                <div className="flex justify-between items-center">
+                <div className="mx-auto">
                     <div className="p-5">
-                        <div className="ml-5">
-                            <h2 className="text-lg font-semibold">
-                                {product.productName}
-                            </h2>
-                            <p className="text-gray-400">
+                        <div className="ml-5 flex items-center gap-x-2">
+                            <h2 className="text-lg font-semibold">Giá: </h2>
+                            <p className="text-gray-800">
                                 {product.basePrice?.toLocaleString("it-IT", {
                                     style: "currency",
                                     currency: "VND",
                                 })}
                             </p>
                         </div>
-                        <h2 className="text-lg font-semibold">
-                            Long Description
-                        </h2>
-                        <p className="text-gray-400">
+                        <div className="ml-5 flex items-center gap-x-2">
+                            <h2 className="text-lg font-semibold"> Mô tả: </h2>
+                            <p className="text-gray-800">
                             {product.longDescription}
                         </p>
+                        </div>
+                    </div>
+                </div>
+                <div className="mx-auto">
+                    <div className="p-5">
+                        <div className="ml-5 flex items-center gap-x-2">
+                            <h2 className="text-lg font-semibold">Giới tính: </h2>
+                            <p className="text-gray-800">
+                                {product.gender?.locale}
+                            </p>
+                        </div>
+                        <div className="ml-5 flex items-center gap-x-2">
+                            <h2 className="text-lg font-semibold"> Khuyến mãi: </h2>
+                            <p className="text-red-600">
+                            {product.sales?.name ?? "Không có khuyến mãi"}
+                        </p>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -287,9 +303,9 @@ const ListProductItem = () => {
                         <table className="bg-white w-full text-sm text-left text-gray-400">
                             <thead>
                                 <tr>
-                                    <th scope="col" className="py-3 px-6 ">
+                                    {/* <th scope="col" className="py-3 px-6 ">
                                         Image
-                                    </th>
+                                    </th> */}
                                     <th scope="col" className="py-3 px-6">
                                         Color
                                     </th>
@@ -313,7 +329,7 @@ const ListProductItem = () => {
                                         className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
                                         key={item.id}
                                     >
-                                        <th
+                                        {/* <th
                                             scope="row"
                                             className="py-2 px-6 w-1/6"
                                         >
@@ -327,7 +343,7 @@ const ListProductItem = () => {
                                                     "https://hd-book-store.vercel.app/images/db_bg.jpeg"
                                                 }
                                             />
-                                        </th>
+                                        </th> */}
                                         <th
                                             scope="row"
                                             className="py-4 px-6 font-medium text-black whitespace-nowrap"

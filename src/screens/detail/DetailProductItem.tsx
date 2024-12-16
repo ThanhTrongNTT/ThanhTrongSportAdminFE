@@ -229,7 +229,7 @@ const DetailProductItem = ({
                                     />
                                 </div>
                             </div>
-                            <div className="mt-10 text-left items-center">
+                            {/* <div className="mt-10 text-left items-center">
                                 <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                     htmlFor="file_input"
@@ -283,7 +283,7 @@ const DetailProductItem = ({
                                         )}
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
                             <button
                                 type="submit"
                                 className={classNames(

@@ -15,10 +15,10 @@ const Widget = (props: WidgetProps) => {
                 </div>
                 <div>{props.icon}</div>
             </div>
-            <div className='flex gap-x-4 pt-2'>
+            {/* <div className='flex gap-x-4 pt-2'>
                 <span className='text-success text-sm font-bold'>+{props.percent}%</span>
                 <span className='text-secondary text-sm font-normal'>since yesterday</span>
-            </div>
+            </div> */}
         </div>
     );
 };

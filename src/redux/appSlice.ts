@@ -1,25 +1,41 @@
+import { Order } from '@/data/Order.interface';
+import { orders } from './slice/orderSlice';
 // Don't add any asynchronous logic or other "side effects" in reducer
 // For example, logging a value to the console, ajax
 // Just keep it simple
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from '@/data/User.interface';
 export interface AppState {
-    initialState: boolean;
-    theme: string;
+    todayMoney: number;
+    todayOrders: number;
+    newClient: number;
+    products: number;
 }
 const initialState: AppState = {
-    initialState: false,
-    theme: "light",
+    todayMoney: 0,
+    todayOrders: 0,
+    newClient: 0,
+    products: 0,
 };
 
 export const appSlice = createSlice({
     name: "app",
     initialState,
     reducers: {
-        getTheme: (state) => {
-            state.theme = localStorage.getItem("theme") || "light";
+        getTodayMoney: (state, action: PayloadAction<number>) => {
+            state.todayMoney = action.payload;
+        },
+        getTodayOrders: (state, action: PayloadAction<number>) => {
+            state.todayOrders = action.payload;
+        },
+        getNewClient: (state, action: PayloadAction<number>) => {
+            state.newClient = action.payload;
+        },
+        getProducts: (state, action: PayloadAction<number>) => {
+            state.products = action.payload;
         },
     },
 });
-export const { getTheme } = appSlice.actions;
+export const { getTodayMoney, getTodayOrders, getNewClient, getProducts } = appSlice.actions;
 
 export default appSlice.reducer;

@@ -217,7 +217,7 @@ const NewProductItem = ({
                                     />
                                 </div>
                             </div>
-                            <div className="mt-10 text-left items-center">
+                            {/* <div className="mt-10 text-left items-center">
                                 <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                     htmlFor="file_input"
@@ -252,7 +252,7 @@ const NewProductItem = ({
                                         )}
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
                             <button
                                 type="submit"
                                 className="mt-10 font-semibold text-white bg-gradient-to-br from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 px-4 py-2 rounded-md inline-block transition-all"

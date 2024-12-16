@@ -1,3 +1,4 @@
+import userApi from "@/api/user.api";
 import {
     IconClient,
     IconGlobalUser,
@@ -5,30 +6,54 @@ import {
     IconSale,
 } from "@/components/icon/Icon";
 import Widget from "@/components/widget/Widget";
+import { getNewClient, getProducts, getTodayMoney, getTodayOrders } from "@/redux/appSlice";
+import { RootState, useAppDispatch } from "@/redux/store";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
-const widgets = [
-    {
-        title: `TODAY'S MONEY`,
-        content: "$53,00",
-        percent: 55,
-        icon: <IconMoney />,
-    },
-    {
-        title: `TODAY'S USERS`,
-        content: "2,300",
-        percent: 3,
-        icon: <IconGlobalUser />,
-    },
-    {
-        title: `NEW CLIENTS`,
-        content: "+3,462",
-        percent: 2,
-        icon: <IconClient />,
-    },
-    { title: `SALE`, content: "$103,430", percent: 5, icon: <IconSale /> },
-];
+
 
 const Home = () => {
+    const dispatch = useAppDispatch();
+    const todayMoney = useSelector((state: RootState) => state.app.todayMoney);
+    const todayOrders = useSelector((state: RootState) => state.app.todayOrders);
+    const newClient = useSelector((state: RootState) => state.app.newClient);
+    const products = useSelector((state: RootState) => state.app.products);
+    const widgets = [
+        {
+            title: `Total Revenue`,
+            content: (todayMoney || 0).toLocaleString(
+                "it-IT",
+                {
+                    style: "currency",
+                    currency: "VND",
+                }
+            ),
+            percent: 55,
+            icon: <IconMoney />,
+        },
+        {
+            title: `Total Orders`,
+            content: (todayOrders || 0).toString(),
+            percent: 3,
+            icon: <IconSale />,
+        },
+        {
+            title: `Total Users`,
+            content: (newClient || 0).toString(),
+            percent: 2,
+            icon: <IconGlobalUser />,
+        },
+        { title: `Total Products`, content: (products || 0).toString(), percent: 5, icon:  <IconClient />},
+    ];
+    useEffect(() => {
+        userApi.getInformationAdmin().then((response) => {
+            dispatch(getTodayMoney(response.data.totalMoney));
+            dispatch(getTodayOrders(response.data.totalOrders));
+            dispatch(getNewClient(response.data.totalClient));
+            dispatch(getProducts(response.data.totalProduct));
+        });
+    }, [dispatch]);
     return (
         <>
             <div className="bg-transparent h-screen">
