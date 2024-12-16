@@ -80,7 +80,8 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
                 if (response.result) {
                     setImages([]); // Xóa tệp trong trạng thái sau khi tải lên
                     setMediaFiles(response.data); // Cập nhật đường dẫn tệp đã tải
-                    toast.success("Upload successful!", {
+                    toast.success("Tải lên thành công!", {
+                        position: "top-center",
                         autoClose: 1000,
                         pauseOnHover: true,
                         draggable: true,
@@ -89,7 +90,8 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
                 }
             })
             .catch((error) => {
-                toast.error("Upload failed", {
+                toast.error("Tải lên thất bại!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -112,6 +114,7 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
     useEffect(() => {
         if (errors.gender) {
             toast.error(errors.gender.message, {
+                position: "top-center",
                 autoClose: 1000,
                 pauseOnHover: false,
                 draggable: true,
@@ -119,6 +122,7 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
             });
         } else if (errors.productName) {
             toast.error(errors.productName.message, {
+                position: "top-center",
                 autoClose: 1000,
                 pauseOnHover: false,
                 draggable: true,
@@ -130,6 +134,7 @@ const NewProduct = ({ handleCreateNew, genders, sales }: NewProductProps) => {
                 if (arrErrors[0]?.message) {
                     const message = arrErrors[0]?.message;
                     toast.error(message.toString(), {
+                        position: "top-center",
                         autoClose: 1000,
                         pauseOnHover: false,
                         draggable: true,

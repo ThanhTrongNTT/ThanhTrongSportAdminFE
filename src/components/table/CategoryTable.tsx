@@ -45,9 +45,19 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
 
     const handleCreateCategory = () => {
         if (childNew.categoryName === "") {
-            toast.error("Please enter category name!");
+            toast.error("Vui lòng nhập tên danh mục!", {
+                position: "top-center",
+                autoClose: 5000,
+                draggable: true,
+                pauseOnHover: false,
+            });
         } else if (childNew.locale === "") {
-            toast.error("Please enter locale!");
+            toast.error("Vui lòng nhập tên hiển thị!", {
+                position: "top-center",
+                autoClose: 5000,
+                draggable: true,
+                pauseOnHover: false,
+            });
         } else {
             handleCreateNewCategory(childNew);
             setChildNew({

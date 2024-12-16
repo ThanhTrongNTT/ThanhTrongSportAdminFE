@@ -55,7 +55,8 @@ const ListColor = () => {
         colorAPI.createColor(colorNew).then((response) => {
             if (response.result) {
                 onCloseNew();
-                toast.success("Create success!", {
+                toast.success("Tạo mới thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -77,7 +78,8 @@ const ListColor = () => {
         colorAPI.updateColor(dataUpdate).then((response) => {
             if (response.result) {
                 onCloseUpdate();
-                toast.success("Update Success!", {
+                toast.success("Cập nhật thành công!", {
+                    position: "top-center",
                     autoClose: 5000,
                     delay: 50,
                     draggable: true,
@@ -101,7 +103,8 @@ const ListColor = () => {
         setModalDelete(!modalDelete);
         await colorAPI.deleteColor(id).then((response) => {
             if (response && response.result) {
-                toast.success("Delete Success!", {
+                toast.success("Xóa thành công!", {
+                    position: "top-center",
                     autoClose: 5000,
                     delay: 50,
                     draggable: true,

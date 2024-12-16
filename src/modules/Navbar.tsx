@@ -23,12 +23,12 @@ const Navbar = () => {
         sessionStorage.clear();
         dispatch(resetUserState());
         clearUser();
-        toast.success(`Logout success!`, {
+        toast.success(`Đăng xuất thành công!`, {
             autoClose: 500,
             delay: 10,
             draggable: true,
             pauseOnHover: false,
-            position: "bottom-right",
+            position: "top-center",
         });
         navigate("/");
     };

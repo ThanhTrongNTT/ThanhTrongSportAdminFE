@@ -50,7 +50,8 @@ const ListSale = () => {
         saleAPI.createSale(saleNew).then((response) => {
             if (response.result) {
                 onCloseNew();
-                toast.success("Create Sale success!", {
+                toast.success("Tạo mới thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -79,7 +80,8 @@ const ListSale = () => {
         saleAPI.updateSale(dataUpdate).then((response) => {
             if (response.result) {
                 onCloseUpdate();
-                toast.success("Update Success!", {
+                toast.success("Cập nhật thành công!", {
+                    position: "top-center",
                     autoClose: 5000,
                     delay: 50,
                     draggable: true,
@@ -103,7 +105,8 @@ const ListSale = () => {
         setModalDelete(!modalDelete);
         await saleAPI.deleteSale(id).then((response) => {
             if (response && response.result) {
-                toast.success("Delete Success!", {
+                toast.success("Xóa thành công!", {
+                    position: "top-center",
                     autoClose: 5000,
                     delay: 50,
                     draggable: true,

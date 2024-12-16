@@ -50,7 +50,8 @@ const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
     const handleCreateNewCategory = (data: Category) => {
         CategoryAPI.addCategory(data).then((response) => {
             if (response.data) {
-                toast.success("Create Category success!", {
+                toast.success("Tạo mới thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -65,7 +66,8 @@ const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
         if (!data.id) return;
         CategoryAPI.updateCategory(data, data.id).then((response) => {
             if (response.data) {
-                toast.success("Update Category success!", {
+                toast.success("Cập nhật thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -79,7 +81,8 @@ const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
     const handleDeleteCategory = (id: string) => {
         CategoryAPI.deleteCategory(id).then((response) => {
             if (response.result) {
-                toast.success("Delete Category success!", {
+                toast.success("Xóa thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -99,6 +102,7 @@ const DetailCategory = ({ handleUpdate, category }: DetailCategoryProps) => {
             if (arrErrors[0]?.message) {
                 const message = arrErrors[0]?.message;
                 toast.error(message.toString(), {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,

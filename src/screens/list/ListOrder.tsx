@@ -48,7 +48,8 @@ const ListOrder = () => {
     const handleDelete = async (id: string) => {
         await OrderAPI.deleteOrder(id).then((res) => {
             if (res.result) {
-                toast.success("Delete Success!", {
+                toast.success("Xóa thành công!", {
+                    position: "top-center",
                     autoClose: 5000,
                     delay: 50,
                     draggable: false,
@@ -66,7 +67,8 @@ const ListOrder = () => {
                 newStatus
             );
             if (response.result) {
-                toast.success("Status updated successfully!", {
+                toast.success("Cập nhật trạng thái thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     delay: 50,
                     draggable: false,
@@ -75,7 +77,8 @@ const ListOrder = () => {
                 getData();
             }
         } catch (error) {
-            toast.error("Failed to update status!", {
+            toast.error("Cập nhật trạng thái thất bại!", {
+                position: "top-center",
                 autoClose: 1000,
                 delay: 50,
                 draggable: false,

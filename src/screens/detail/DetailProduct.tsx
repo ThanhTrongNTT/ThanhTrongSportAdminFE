@@ -59,7 +59,8 @@ const DetailProduct = ({
     const uploadFiles = async () => {
         setDisable(false);
         if (images.length === 0) {
-            toast.error("Please choose your images", {
+            toast.error("Vui lòng chọn ảnh!", {
+                position: "top-center",
                 autoClose: 1000,
                 pauseOnHover: false,
                 draggable: true,
@@ -71,7 +72,8 @@ const DetailProduct = ({
         await MediaFileAPI.uploadFiles(images).then((response) => {
             if (response.data) {
                 setImages([]);
-                toast.success("Upload success", {
+                toast.success("Tải lên thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -114,6 +116,7 @@ const DetailProduct = ({
             if (arrErrors[0]?.message) {
                 const message = arrErrors[0]?.message;
                 toast.error(message.toString(), {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,

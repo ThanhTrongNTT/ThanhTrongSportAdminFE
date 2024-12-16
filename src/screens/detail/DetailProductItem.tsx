@@ -64,6 +64,7 @@ const DetailProductItem = ({
         try {
             await new Promise((resolve) => setTimeout(resolve, 2000));
             toast.success("Upload success", {
+                position: "top-center",
                 autoClose: 1000,
                 pauseOnHover: false,
                 draggable: true,
@@ -128,6 +129,7 @@ const DetailProductItem = ({
             if (arrErrors[0]?.message) {
                 const message = arrErrors[0]?.message;
                 toast.error(message.toString(), {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,

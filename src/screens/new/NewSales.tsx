@@ -56,7 +56,8 @@ const NewSales = ({ handleCreateNew, sale, setSale }: NewSalesProps) => {
 
         if (data.startDate && data.endDate) {
             if (data.startDate >= data.endDate) {
-                toast.error("End date must be greater than start date", {
+                toast.error("Ngày kết thúc phải lớn hơn ngày bắt đầu!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -92,6 +93,7 @@ const NewSales = ({ handleCreateNew, sale, setSale }: NewSalesProps) => {
             if (arrErrors[0]?.message) {
                 const message = arrErrors[0]?.message;
                 toast.error(message.toString(), {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,

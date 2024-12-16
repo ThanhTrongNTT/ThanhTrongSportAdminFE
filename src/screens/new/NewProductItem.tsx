@@ -80,7 +80,8 @@ const NewProductItem = ({
                     if (response.result) {
                         setImage(null);
                         setMediaFile(response.data);
-                        toast.success("Upload successful!", {
+                        toast.success("Tải lên thành công!", {
+                            position: "top-center",
                             autoClose: 1000,
                             pauseOnHover: true,
                             draggable: true,
@@ -89,7 +90,8 @@ const NewProductItem = ({
                     }
                 })
                 .catch((error) => {
-                    toast.error("Upload failed", {
+                    toast.error("Tải lên thất bại!", {
+                        position: "top-center",
                         autoClose: 1000,
                         pauseOnHover: false,
                         draggable: true,
@@ -118,6 +120,7 @@ const NewProductItem = ({
             if (arrErrors[0]?.message) {
                 const message = arrErrors[0]?.message;
                 toast.error(message.toString(), {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,

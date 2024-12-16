@@ -59,6 +59,7 @@ const NewColor = ({ color, setColor, handleCreateNew }: NewColorProps) => {
             if (arrErrors[0]?.message) {
                 const message = arrErrors[0]?.message;
                 toast.error(message.toString(), {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,

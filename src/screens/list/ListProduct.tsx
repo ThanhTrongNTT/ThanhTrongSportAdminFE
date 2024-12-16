@@ -44,7 +44,8 @@ const ListProduct = () => {
         ProductAPI.addProduct(product).then((response) => {
             if (response.data) {
                 onCloseNew();
-                toast.success("Create Product success!", {
+                toast.success("Tạo mới thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -70,7 +71,8 @@ const ListProduct = () => {
                 (response) => {
                     if (response.data) {
                         onCloseUpdate();
-                        toast.success("Update Product success!", {
+                        toast.success("Cập nhật thành công!", {
+                            position: "top-center",
                             autoClose: 1000,
                             pauseOnHover: false,
                             draggable: true,
@@ -90,7 +92,8 @@ const ListProduct = () => {
         setModalDelete(!modalDelete);
         ProductAPI.deleteProduct(id).then((response) => {
             if (response.result) {
-                toast.success("Delete Product success!", {
+                toast.success("Xóa thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,

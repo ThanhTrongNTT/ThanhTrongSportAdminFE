@@ -37,6 +37,7 @@ const List = () => {
         await userApi.deleteUser(id, userInfo?.id || "").then((response) => {
             if (response.result)
                 toast.success("Xóa thành công!", {
+                    position: "top-center",
                     autoClose: 500,
                     delay: 50,
                     draggable: true,
@@ -50,7 +51,8 @@ const List = () => {
         if (user.activeFlag) {
             await userApi.deactiveUser(user).then((response) => {
                 if (response.data)
-                    toast.success("Deactive User success!", {
+                    toast.success("Hủy kích hoạt thành công!", {
+                        position: "top-center",
                         autoClose: 500,
                         delay: 50,
                         draggable: true,
@@ -60,7 +62,8 @@ const List = () => {
         } else {
             await userApi.activeUser(user).then((response) => {
                 if (response.data)
-                    toast.success("Active User success!", {
+                    toast.success("Kích hoạt thành công!", {
+                        position: "top-center",
                         autoClose: 500,
                         delay: 50,
                         draggable: true,

@@ -45,7 +45,8 @@ const ListCoupon = () => {
         couponAPI.createCoupon(newCoupon).then((response) => {
             if (response.result) {
                 onCloseNew();
-                toast.success("Create Sale success!", {
+                toast.success("Tạo mới thành công!", {
+                    position: "top-center",
                     autoClose: 1000,
                     pauseOnHover: false,
                     draggable: true,
@@ -72,7 +73,8 @@ const ListCoupon = () => {
         couponAPI.updateCoupon(updateCoupon).then((response) => {
             if (response.result) {
                 onCloseUpdate();
-                toast.success("Update Success!", {
+                toast.success("Cập nhật thành công!", {
+                    position: "top-center",
                     autoClose: 5000,
                     delay: 50,
                     draggable: true,
@@ -96,7 +98,8 @@ const ListCoupon = () => {
         setModalDelete(!modalDelete);
         await couponAPI.deleteCoupon(id).then((response) => {
             if (response && response.result) {
-                toast.success("Delete Success!", {
+                toast.success("Xóa thành công!", {
+                    position: "top-center",
                     autoClose: 5000,
                     delay: 50,
                     draggable: true,
