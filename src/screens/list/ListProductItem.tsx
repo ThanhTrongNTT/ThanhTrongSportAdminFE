@@ -247,8 +247,8 @@ const ListProductItem = () => {
                         )}
                     </Swiper>
                 </div>
-                <div className="flex justify-between items-center">
-                <div className="mx-auto">
+                <div className="flex justify-center items-center content-center">
+                <div className="w-1/2">
                     <div className="p-5">
                         <div className="ml-5 flex items-center gap-x-2">
                             <h2 className="text-lg font-semibold">Giá: </h2>
@@ -260,14 +260,14 @@ const ListProductItem = () => {
                             </p>
                         </div>
                         <div className="ml-5 flex items-center gap-x-2">
-                            <h2 className="text-lg font-semibold"> Mô tả: </h2>
-                            <p className="text-gray-800">
+                            <h2 className="text-lg font-semibold text-nowrap"> Mô tả: </h2>
+                            <p className="text-gray-800 truncate">
                             {product.longDescription}
                         </p>
                         </div>
                     </div>
                 </div>
-                <div className="mx-auto">
+                <div className="w-1/2">
                     <div className="p-5">
                         <div className="ml-5 flex items-center gap-x-2">
                             <h2 className="text-lg font-semibold">Giới tính: </h2>
@@ -276,8 +276,8 @@ const ListProductItem = () => {
                             </p>
                         </div>
                         <div className="ml-5 flex items-center gap-x-2">
-                            <h2 className="text-lg font-semibold"> Khuyến mãi: </h2>
-                            <p className="text-red-600">
+                            <h2 className="text-lg font-semibold text-nowrap"> Khuyến mãi: </h2>
+                            <p className="text-red-600 truncate">
                             {product.sales?.name ?? "Không có khuyến mãi"}
                         </p>
                         </div>
