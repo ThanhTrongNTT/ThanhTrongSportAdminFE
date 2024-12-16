@@ -1,10 +1,7 @@
-import { Order } from '@/data/Order.interface';
-import { orders } from './slice/orderSlice';
 // Don't add any asynchronous logic or other "side effects" in reducer
 // For example, logging a value to the console, ajax
 // Just keep it simple
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from '@/data/User.interface';
 export interface AppState {
     todayMoney: number;
     todayOrders: number;
