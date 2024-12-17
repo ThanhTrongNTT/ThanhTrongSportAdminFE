@@ -306,6 +306,9 @@ const ListProductItem = () => {
                                     {/* <th scope="col" className="py-3 px-6 ">
                                         Image
                                     </th> */}
+                                    <th scope="col" className="px-6">
+                                        Id
+                                    </th>
                                     <th scope="col" className="py-3 px-6">
                                         Color
                                     </th>
@@ -324,7 +327,7 @@ const ListProductItem = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {productItems.map((item) => (
+                                {productItems.map((item, index) => (
                                     <tr
                                         className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
                                         key={item.id}
@@ -344,6 +347,12 @@ const ListProductItem = () => {
                                                 }
                                             />
                                         </th> */}
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                        >
+                                            {index * currentPage + 1}
+                                        </th>
                                         <th
                                             scope="row"
                                             className="py-4 px-6 font-medium text-black whitespace-nowrap"

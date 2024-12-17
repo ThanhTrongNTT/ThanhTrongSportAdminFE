@@ -156,6 +156,9 @@ const ListCoupon = () => {
                         <table className="bg-white w-full text-sm text-left text-gray-400">
                             <thead>
                                 <tr>
+                                    <th scope="col" className="px-6">
+                                        Id
+                                    </th>
                                     <th scope="col" className="py-3 px-6">
                                         Mã giảm giá
                                     </th>
@@ -185,6 +188,12 @@ const ListCoupon = () => {
                                         className="bg-white border border-gray-c2 hover:bg-gray-c2 cursor-pointer"
                                         key={index}
                                     >
+                                        <th
+                                            scope="row"
+                                            className="py-4 px-6 font-medium text-black whitespace-nowrap"
+                                        >
+                                            {index * currentPage + 1}
+                                        </th>
                                         <th
                                             scope="row"
                                             className="py-4 px-6 font-medium text-black whitespace-nowrap"

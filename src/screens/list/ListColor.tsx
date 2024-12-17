@@ -192,7 +192,7 @@ const ListColor = () => {
                                             scope="row"
                                             className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                         >
-                                            {index * currentPage}
+                                            {index * currentPage + 1}
                                         </th>
                                         <th
                                             scope="row"

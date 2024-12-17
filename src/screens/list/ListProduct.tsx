@@ -173,6 +173,7 @@ const ListProduct = () => {
                         onCloseUpdate={onClickUpdate}
                         setIdDeleted={setIdDeleted}
                         onCloseDelete={onCloseDelete}
+                        currentPage={currentPage}
                     />
                     {/* {products.map((product, index) => (
                             <ProductCard
