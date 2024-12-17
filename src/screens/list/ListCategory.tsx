@@ -198,7 +198,7 @@ const ListCategory = () => {
                                         scope="row"
                                         className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                     >
-                                        {category.id}
+                                        {index * currentPage}
                                     </th>
                                     <th
                                         scope="row"
