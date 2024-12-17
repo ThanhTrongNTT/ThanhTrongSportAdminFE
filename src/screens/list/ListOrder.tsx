@@ -140,7 +140,7 @@ const ListOrder = () => {
                                                 scope="row"
                                                 className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                             >
-                                                {index * currentPage + 1}
+                                                {(currentPage - 1) * 5 + index + 1}
                                             </th>
                                             <th
                                                 scope="row"
