@@ -1,3 +1,4 @@
+import { Coupon } from "./Coupon.interface";
 import { ProductItem } from "./Product.interface";
 import { User } from "./User.interface";
 export interface Order {
@@ -11,6 +12,7 @@ export interface Order {
     status?: string;
     paymentMethod?: string;
     address?: Address;
+    coupon?: Coupon;
     isPaid?: boolean;
 }
 
