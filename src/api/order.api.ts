@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import AxiosClient from "./axiosClient/AxiosClient";
 import { PageResponse } from "@/data/Interface";
-import { Order } from "@/data/Order.interface";
+import { Order, OrderItem } from "@/data/Order.interface";
 import { ApiResponse } from "@/data/payload";
 
 const OrderAPI = {
@@ -23,7 +23,7 @@ const OrderAPI = {
         return AxiosClient.get(url);
     },
     deleteOrder: (id: string): Promise<ApiResponse<boolean>> => {
-        const url = `orders/${id}`;
+        const url = `order/${id}`;
         return AxiosClient.delete(url);
     },
     updateOrderStatus: (
@@ -32,6 +32,10 @@ const OrderAPI = {
     ): Promise<ApiResponse<Order>> => {
         const url = `order/${id}/status?status=${status}`;
         return AxiosClient.put(url, { status });
+    },
+    getOrderItems: (id: string): Promise<ApiResponse<OrderItem[]>> => {
+        const url = `orders/items/${id}`;
+        return AxiosClient.get(url);
     },
 };
 export default OrderAPI;

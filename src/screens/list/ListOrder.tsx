@@ -1,10 +1,13 @@
 import OrderAPI from "@/api/order.api";
+import Modal from "@/components/modal/Modal";
+import ModalDelete from "@/components/modal/ModalDelete";
 import { Order } from "@/data/Order.interface";
 import { STATUS_OPTIONS } from "@/utils/Constant";
 import { Pagination } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import OrderItemList from "../detail/OrderItemList";
 
 const ListOrder = () => {
     const navigate = useNavigate();
@@ -55,6 +58,7 @@ const ListOrder = () => {
                     draggable: false,
                     pauseOnHover: false,
                 });
+                onCloseDelete();
             }
         });
         getData();
@@ -93,6 +97,20 @@ const ListOrder = () => {
 
     return (
         <>
+            <Modal isVisible={modalView} onClose={onCloseView}>
+                <OrderItemList
+                    id={orderView?.id || ""}
+                    // onCloseDelModal={onCloseView}
+                />
+            </Modal>
+            <Modal isVisible={modalDelete} onClose={onCloseDelete}>
+                <ModalDelete
+                    id={idDelete}
+                    handleDelete={handleDelete}
+                    title={"Are you sure to delete this order?"}
+                    onCloseDelModal={onCloseDelete}
+                />
+            </Modal>
             <div className="">
                 <div className="p-5">
                     <div className="overflow-x-auto rounded-2xl border mx-4 border-gray-c4 ">
@@ -113,6 +131,9 @@ const ListOrder = () => {
                                     </th>
                                     <th scope="col" className="px-6">
                                         Payment Method
+                                    </th>
+                                    <th scope="col" className="px-6">
+                                        Coupon
                                     </th>
                                     <th scope="col" className="px-6">
                                         Is Paid
@@ -140,7 +161,9 @@ const ListOrder = () => {
                                                 scope="row"
                                                 className="py-4 px-6 font-medium text-black whitespace-nowrap"
                                             >
-                                                {(currentPage - 1) * 5 + index + 1}
+                                                {(currentPage - 1) * 5 +
+                                                    index +
+                                                    1}
                                             </th>
                                             <th
                                                 scope="row"
@@ -200,6 +223,13 @@ const ListOrder = () => {
                                                 scope="row"
                                                 className="py-4 px-6 font-medium whitespace-nowrap"
                                             >
+                                                Giảm{" "}
+                                                {order.coupon?.discount || 0}%
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                className="py-4 px-6 font-medium whitespace-nowrap"
+                                            >
                                                 {order.isPaid
                                                     ? "Paid"
                                                     : "Not Paid"}
@@ -211,13 +241,20 @@ const ListOrder = () => {
                                                 <div className="text-center">
                                                     <span
                                                         className="text-white hover:bg-white hover:text-black bg-success  rounded-lg px-2 mx-2"
-                                                        onClick={() => {}}
+                                                        onClick={() => {
+                                                            onClickView(order);
+                                                        }}
                                                     >
-                                                        Edit
+                                                        View
                                                     </span>
                                                     <span
                                                         className="text-white bg-warning rounded-lg px-2 hover:bg-white hover:text-black mx-2"
-                                                        onClick={() => {}}
+                                                        onClick={() => {
+                                                            setIdDelete(
+                                                                order.id ?? ""
+                                                            );
+                                                            onCloseDelete();
+                                                        }}
                                                     >
                                                         Delete
                                                     </span>
