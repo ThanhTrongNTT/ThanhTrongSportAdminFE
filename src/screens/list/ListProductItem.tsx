@@ -64,7 +64,7 @@ const ListProductItem = () => {
             color: data.color,
             size: data.size,
             stock: data.stock,
-            mainImage: data.mainImage,
+            // mainImage: data.mainImage,
             product: product,
         };
         ProductAPI.createProductItem(itemNew).then((response) => {
@@ -90,7 +90,7 @@ const ListProductItem = () => {
             color: data.color,
             size: data.size,
             stock: data.stock,
-            mainImage: data.mainImage,
+            // mainImage: data.mainImage,
             product: product,
         };
         ProductAPI.updateProductItem(itemUpdate).then((response) => {

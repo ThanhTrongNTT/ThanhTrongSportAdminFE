@@ -43,7 +43,7 @@ export interface ProductItem {
     color?: Color | null;
     size?: string;
     stock?: number;
-    mainImage?: Image | null;
+    // mainImage?: Image | null;
     product?: Product;
 }
 export const initProductItem: ProductItem = {
@@ -51,7 +51,7 @@ export const initProductItem: ProductItem = {
     color: null,
     size: "",
     stock: 0,
-    mainImage: initImage,
+    // mainImage: initImage,
     product: initProduct,
 };
 export interface Category {

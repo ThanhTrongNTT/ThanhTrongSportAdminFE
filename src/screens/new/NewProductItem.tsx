@@ -42,7 +42,6 @@ const NewProductItem = ({
             color: productItem.color,
             size: productItem.size,
             stock: productItem.stock,
-            mainImage: productItem.mainImage,
             product: productItem.product,
         },
     });
@@ -109,7 +108,7 @@ const NewProductItem = ({
             color: productItem.color,
             size: productItem.size,
             stock: productItem.stock,
-            mainImage: productItem.mainImage,
+            // mainImage: productItem.mainImage,
             product: productItem.product,
         });
     }, [productItem, reset]);

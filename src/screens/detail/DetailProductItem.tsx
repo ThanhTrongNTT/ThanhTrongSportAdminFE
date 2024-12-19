@@ -1,6 +1,8 @@
+import MediaFileAPI from "@/api/mediaFile.api";
 import DropdownColor from "@/components/dropdown/DropdownColor";
 import DropdownSize from "@/components/dropdown/DropdownSize";
 import Field from "@/components/field/Field";
+import { Image } from "@/data/Image.interface";
 import { Color, ProductItem } from "@/data/Product.interface";
 import classNames from "@/utils/classNames";
 import { productItemSchema } from "@/utils/schema.resolver";
@@ -22,10 +24,12 @@ const DetailProductItem = ({
     const [isDisabled, setIsDisabled] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
     const [image, setImage] = useState<File | null>(null);
+    const [mediaFile, setMediaFile] = useState<Image | null>(null);
     const {
         handleSubmit,
         control,
         setValue,
+        clearErrors,
         formState: { errors },
         watch,
     } = useForm<ProductItem>({
@@ -35,13 +39,17 @@ const DetailProductItem = ({
             color: productItem.color,
             size: productItem.size,
             stock: productItem.stock,
-            mainImage: productItem.mainImage,
             product: productItem.product,
         },
     });
 
     const submit = async (data: FieldValues) => {
-        await handleUpdate(data);
+        console.log(data);
+        if (image) {
+            await uploadFiles();
+        }
+        const productItem = { ...data, mainImage: mediaFile };
+        await handleUpdate(productItem);
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,56 +66,37 @@ const DetailProductItem = ({
     };
 
     const uploadFiles = async () => {
-        if (!image) return;
-        setIsUploading(true);
-        setIsDisabled(false);
-        try {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            toast.success("Upload success", {
-                position: "top-center",
-                autoClose: 1000,
-                pauseOnHover: false,
-                draggable: true,
-                delay: 50,
-            });
-            const file = {
-                name: image.name,
-                url: URL.createObjectURL(image),
-                type: image.type,
-                id: "",
-            };
-            setValue("mainImage", file);
-        } catch (error) {
-            console.error("Upload failed", error);
-        } finally {
-            setIsUploading(false);
-            setIsDisabled(true);
-            setImage(null);
+        if (!image) {
+            return;
+        } else {
+            setIsUploading(true);
+            await MediaFileAPI.upload(image)
+                .then((response) => {
+                    if (response.result) {
+                        setImage(null);
+                        setMediaFile(response.data);
+                        toast.success("Tải lên thành công!", {
+                            position: "top-center",
+                            autoClose: 1000,
+                            pauseOnHover: true,
+                            draggable: true,
+                            delay: 50,
+                        });
+                    }
+                })
+                .catch((error) => {
+                    toast.error("Tải lên thất bại!", {
+                        position: "top-center",
+                        autoClose: 1000,
+                        pauseOnHover: false,
+                        draggable: true,
+                        delay: 50,
+                    });
+                })
+                .finally(() => {
+                    setIsUploading(false);
+                });
         }
-        // if (images.length === 0) {
-        //     toast.error("Please choose your images", {
-        //         autoClose: 1000,
-        //         pauseOnHover: false,
-        //         draggable: true,
-        //         delay: 50,
-        //     });
-        //     setDisable(true);
-        //     return;
-        // }
-        // await MediaFileAPI.uploadFiles(images).then((response) => {
-        //     if (response.data) {
-        //         setImages([]);
-        //         toast.success("Upload success", {
-        //             autoClose: 1000,
-        //             pauseOnHover: false,
-        //             draggable: true,
-        //             delay: 50,
-        //         });
-        //         setDisable(true);
-        //         setMediaFiles(response.data);
-        //     }
-        //     setDisable(true);
-        // });
     };
 
     const formValues = watch();
@@ -119,8 +108,7 @@ const DetailProductItem = ({
         return (
             formValues.color?.name === productItem.color?.name &&
             formValues.size === productItem.size &&
-            formValues.stock === productItem.stock &&
-            formValues.mainImage === productItem.mainImage
+            formValues.stock === productItem.stock
         );
     };
     useEffect(() => {

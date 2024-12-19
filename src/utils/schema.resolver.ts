@@ -81,9 +81,9 @@ export const colorSchema: Yup.ObjectSchema<Color> = Yup.object({
 
 export const productItemSchema: Yup.ObjectSchema<ProductItem> = Yup.object({
     id: Yup.string().optional(),
+    // mainImage: Yup.mixed().optional(),
     color: Yup.mixed<Color>().required("Please choose your color!"),
     size: Yup.string().required("Please choose your size!"),
     stock: Yup.number().min(1, "Please input value over 1").required(),
-    mainImage: Yup.mixed<Image>().required("Please provide images!"),
     product: Yup.mixed<Product>().optional(),
 });
